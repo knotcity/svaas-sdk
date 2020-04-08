@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2018",
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "moduleResolution": "node",
+      "sourceMap": true,
+      "outDir": "dist",
+      "declaration": true,
+      "esModuleInterop": true,
+      "baseUrl": ".",
+      "paths": {
+        "*": [
+          "node_modules/*"
+        ]
+      },
+      "importsNotUsedAsValues": "error"
+    },
+    "include": [
+      "src/**/*"
+    ]
+  }
+  
