@@ -13,11 +13,6 @@ export class KnotSAS
     #options: KnotSASOptions;
     #ax: axios.AxiosInstance;
 
-    get endpoint()
-    {
-        return this.#options.endpoint || 'https://services.knotcity.io';
-    }
-
     constructor(options: KnotSASOptions)
     {
         if (typeof (options) !== 'object')
@@ -50,7 +45,7 @@ export class KnotSAS
 
         this.#options = options;
         this.#ax = axios.default.create({
-            baseURL: options.endpoint
+            baseURL: this.#options.endpoint || 'https://services.knotcity.io'
         });
         this.#ax.interceptors.request.use(c =>
         {
