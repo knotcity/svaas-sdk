@@ -49,13 +49,11 @@ export class KnotSAS
         });
         this.#ax.interceptors.request.use(c =>
         {
-            console.log('headers', c.headers);
             c.headers['X-Knot-Date'] = +new Date();
             c.headers['Content-Type'] = 'application/json';
             c.headers['Content-Length'] = c.data ? JSON.stringify(c.data).length : 0;
             try
             {
-                console.log(c.url);
                 c.headers['Authorization'] = reqSigner.generateAuthorization({
                     headers: c.headers,
                     method: c.method || 'POST',
@@ -72,14 +70,34 @@ export class KnotSAS
             {
                 throwError(`Generating the request signature failed: ${err.toString()}`);
             }
-            console.log('headers after', c.headers);
             return c;
         });
     }
 
-    async rebootStation(id: number)
+    rebootStation(id: number)
     {
-        this.makeStationRequest(id, 'reboot');
+        return this.makeStationRequest(id, 'reboot');
+    }
+
+    pingStation(id: number)
+    {
+        return this.makeStationRequest(id, 'ping');
+    }
+
+    unlockSpot(stationId: number, spotId: number, unlockId: number)
+    {
+        if (!Number.isInteger(spotId) || spotId < 1)
+        {
+            throwError('Spot ID should be an integer greater or equal to 1');
+        }
+        if (!Number.isInteger(unlockId) || unlockId < 0)
+        {
+            throwError('Unlock ID should be an integer greater or equal to 0');
+        }
+        return this.makeStationRequest(stationId, 'unlock', {
+            spot: spotId,
+            unlock: unlockId
+        });
     }
 
     private makeStationRequest(id: number, action: string, data?: any)
