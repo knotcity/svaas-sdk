@@ -4,7 +4,8 @@
   "description": "Knot Station As a Service SDK for NodeJS",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -13,14 +14,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^12.12.32",
-    "@typescript-eslint/eslint-plugin": "^2.25.0",
-    "@typescript-eslint/parser": "^2.25.0",
-    "eslint": "^6.8.0",
+    "@types/node": "^12.12.38",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "eslint": "^7.0.0",
     "typescript": "^3.8.2"
   },
   "dependencies": {
-    "@knot/request-signer": "0.0.3",
+    "@knot/request-signer": "0.0.5",
     "axios": "^0.19.2"
   }
 }

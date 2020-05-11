@@ -1,34 +1,34 @@
 import axios = require('axios');
 import reqSigner = require('@knot/request-signer');
 
-export enum KnotTypeEvents
+export enum EventType
 {
-    Unlocked = 'unlocked',
-    Locked = 'locked',
-    Boot = 'boot',
-    State = 'state',
-    Shake = 'shake',
-    HighTemp = 'high-temp',
-    CriticalEnergy = 'critical-energy',
-    UnexpectedUnlocked = 'unexpected-unlock',
-    SpotDefect = 'spot-defect'
+    UNLOCKED = 'unlocked',
+    LOCKED = 'locked',
+    BOOT = 'boot',
+    STATE = 'state',
+    SHAKE = 'shake',
+    HIGH_TEMP = 'high-temp',
+    ENERGY_CRITICAL = 'critical-energy',
+    UNEXPECTED_UNLOCK = 'unexpected-unlock',
+    SPOT_DEFECT = 'spot-defect'
 }
 
 type EventBase = {
-    event: KnotTypeEvents,
+    event: EventType,
     station: number
 }
 
-export type UnlockedEvents = EventBase & {
-    event: KnotTypeEvents.Unlocked,
+export type UnlockedEvent = EventBase & {
+    event: EventType.UNLOCKED,
     data: {
         spot: number,
         unlock: number
     }
 };
 
-export type LockedEvents = {
-    event: KnotTypeEvents.Locked,
+export type LockedEvent = {
+    event: EventType.LOCKED,
     data: {
         spot: number,
         vehicle: number,
@@ -37,53 +37,52 @@ export type LockedEvents = {
     }
 };
 
-export type BootEvents = EventBase & {
-    event: KnotTypeEvents.Boot,
+export type BootEvent = EventBase & {
+    event: EventType.BOOT,
 };
 
-export type StateEvents = EventBase & {
-    event: KnotTypeEvents.State,
+export type StateEvent = EventBase & {
+    event: EventType.STATE,
     data: {
         mainboard: number,
         vehicles: number[]
     }
 };
 
-export type ShakeEvents = EventBase & {
-    event: KnotTypeEvents.Shake,
+export type ShakeEvent = EventBase & {
+    event: EventType.SHAKE,
 };
 
-export type HighTempEvents = EventBase & {
-    "event": KnotTypeEvents.HighTemp,
-    "data": {
-        "temperature": number,
-        "critical": boolean
+export type HighTempEvent = EventBase & {
+    event: EventType.HIGH_TEMP,
+    data: {
+        temperature: number,
+        critical: boolean
     }
 };
 
-export type CriticalEnergyEvents = EventBase & {
-    "event": KnotTypeEvents.CriticalEnergy,
+export type CriticalEnergyEvent = EventBase & {
+    event: EventType.ENERGY_CRITICAL,
 };
 
-export type UnexpectedUnlockedEvents = EventBase & {
-    "event": KnotTypeEvents.UnexpectedUnlocked,
-    "data": {
-        "spot": number
+export type UnexpectedUnlockEvent = EventBase & {
+    event: EventType.UNEXPECTED_UNLOCK,
+    data: {
+        spot: number
     }
 };
 
 export type SpotDefectEvents = EventBase & {
-    "event": KnotTypeEvents.SpotDefect,
-    "data": {
-        "spot": number,
-        "vehicle": number,
-        "vehicle_voltage": number,
-        "lock_status": number
+    event: EventType.SPOT_DEFECT,
+    data: {
+        spot: number,
+        vehicle: number,
+        vehicle_voltage: number,
+        lock_status: number
     }
 };
 
-export type KnotEvents = UnlockedEvents | LockedEvents | BootEvents | StateEvents | ShakeEvents | HighTempEvents | CriticalEnergyEvents | UnexpectedUnlockedEvents | SpotDefectEvents;
-
+export type KnotEvent = UnlockedEvent | LockedEvent | BootEvent | StateEvent | ShakeEvent | HighTempEvent | CriticalEnergyEvent | UnexpectedUnlockEvent | SpotDefectEvents;
 
 interface KnotSASOptions
 {
@@ -91,7 +90,6 @@ interface KnotSASOptions
     privateKey: string;
     keyId: string;
 }
-
 
 export class KnotSAS
 {

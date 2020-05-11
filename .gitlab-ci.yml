@@ -1,0 +1,30 @@
+image: "node:dubnium-buster-slim"
+
+stages:
+  - build
+  - deploy
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+  - node_modules/
+
+build:
+  stage: build
+  before_script:
+    - echo "//npm.knotcity.io/:_authToken=$NPM_TOKEN" >> .npmrc
+    - npm install
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  before_script:
+    - echo "//npm.knotcity.io/:_authToken=$NPM_TOKEN" >> .npmrc
+  script:
+    - npm publish
