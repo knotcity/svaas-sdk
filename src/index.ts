@@ -189,10 +189,11 @@ export class KnotSAS
         return this.makeStationRequest('v0.1', id, 'refresh');
     }
 
-    confirmLockSpot(stationId: number, spotId: number)
+    confirmLockSpot(stationId: number, spotId: number, accepted: boolean)
     {
         return this.makeStationRequest('v0.1', stationId, 'lock-response', {
-            spot: spotId
+            spot: spotId,
+            accepted
         });
     }
 
