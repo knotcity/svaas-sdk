@@ -1,5 +1,6 @@
 tslint.json
 tsconfig.json
 src/
+.idea/
 .gitlab-ci.yml
 dist/tsconfig.tsbuildinfo
