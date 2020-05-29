@@ -206,7 +206,7 @@ export class KnotSAS
         });
     }
 
-    checkHTTPSignature(request: SignatureRequest)
+    checkKnotRequestSignature(request: SignatureRequest)
     {
         try
         {
