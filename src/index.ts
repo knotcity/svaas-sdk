@@ -95,7 +95,7 @@ interface KnotSASOptions
 
 interface SignatureRequest
 {
-    headers: { [key: string]: string },
+    headers: { [key: string]: any },
     httpMethod: string,
     path: string
 }
@@ -212,7 +212,7 @@ export class KnotSAS
         {
             const headers = Object.entries(request.headers);
             const authHeader = headers.find(e => e[0].toLocaleLowerCase() == 'authorization');
-            if (!authHeader)
+            if (!authHeader || typeof authHeader[1] !== 'string')
             {
                 return false;
             }
