@@ -1,6 +1,7 @@
-image: "node:dubnium-buster-slim"
+image: "node:erbium-alpine"
 
 stages:
+  - test # Run unit tests
   - build
   - deploy
 
@@ -8,6 +9,14 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
   - node_modules/
+
+lint:
+  stage: test
+  before_script:
+    - echo "//npm.knotcity.io/:_authToken=$NPM_TOKEN" >> .npmrc
+    - npm ci
+  script:
+    - npm run lint
 
 build:
   stage: build

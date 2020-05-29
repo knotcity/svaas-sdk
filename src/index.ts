@@ -1,5 +1,6 @@
 import axios = require('axios');
 import reqSigner = require('@knot/request-signer');
+import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthorization } from '@knot/request-signer';
 
 export enum EventType
 {
@@ -88,7 +89,15 @@ interface KnotSASOptions
 {
     endpoint?: string;
     privateKey: string;
+    knotPublicKey: string;
     keyId: string;
+}
+
+interface SignatureRequest
+{
+    headers: { [key: string]: string },
+    httpMethod: string,
+    path: string
 }
 
 export class KnotSAS
@@ -100,17 +109,17 @@ export class KnotSAS
     {
         if (typeof (options) !== 'object')
         {
-            throwError("Options should be an object");
+            throwError('Options should be an object');
         }
         if (options.endpoint !== undefined)
         {
             if (typeof options.endpoint !== 'string')
             {
-                throwError("The given endpoint should be a string");
+                throwError('The given endpoint should be a string');
             }
             if (options.endpoint.length < 3)
             {
-                throwError("The given endpoint is too short to be valid");
+                throwError('The given endpoint is too short to be valid');
             }
             if (options.endpoint.endsWith('/'))
             {
@@ -119,11 +128,11 @@ export class KnotSAS
         }
         if (typeof options.keyId !== 'string')
         {
-            throwError("The given keyId should be a string");
+            throwError('The given keyId should be a string');
         }
         if (typeof options.privateKey !== 'string')
         {
-            throwError("The given privateKey should be a string");
+            throwError('The given privateKey should be a string');
         }
 
         this.#options = options;
@@ -195,6 +204,39 @@ export class KnotSAS
             spot: spotId,
             accepted
         });
+    }
+
+    checkKnotRequestSignature(request: SignatureRequest)
+    {
+        try
+        {
+            const headers = Object.entries(request.headers);
+            const authHeader = headers.find(e => e[0].toLocaleLowerCase() == 'authorization');
+            if (!authHeader)
+            {
+                return false;
+            }
+
+            const authComponents = parseAuthorizationHeader(authHeader[1]);
+            if (!authComponents.headers.includes('x-knot-date') || !authComponents.headers.includes('(request-target)'))
+            {
+                return false;
+            }
+
+            const compts: AuthorizationHeaderComponents = authComponents.algorithm && authComponents.hash ?
+                (authComponents as AuthorizationHeaderComponents) :
+                Object.assign(authComponents, { hash: 'sha256', algorithm: 'ecdsa' });
+
+            return verifyAuthorization(compts, {
+                headers: request.headers,
+                method: request.httpMethod,
+                path: request.path
+            }, this.#options.knotPublicKey);
+        }
+        catch (e)
+        {
+            return false;
+        }
     }
 
     private makeStationRequest(version: string, id: number, action: string, data?: any)
