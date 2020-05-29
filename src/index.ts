@@ -1,5 +1,7 @@
 import axios = require('axios');
 import reqSigner = require('@knot/request-signer');
+import { parseAuthorizationHeader, verifyAuthorization } from "@knot/request-signer";
+import type { AuthorizationHeaderComponents } from "@knot/request-signer/dist/utils";
 
 export enum EventType
 {
@@ -88,7 +90,15 @@ interface KnotSASOptions
 {
     endpoint?: string;
     privateKey: string;
+    knotPublicKey: string;
     keyId: string;
+}
+
+interface SignatureRequest
+{
+    headers: { [key: string]: string },
+    httpMethod: string,
+    path: string
 }
 
 export class KnotSAS
@@ -195,6 +205,39 @@ export class KnotSAS
             spot: spotId,
             accepted
         });
+    }
+
+    checkHTTPSignature(request: SignatureRequest)
+    {
+        try
+        {
+            const headers = Object.entries(request.headers);
+            const authHeader = headers.find(e => e[0].toLocaleLowerCase() == 'authorization');
+            if (!authHeader)
+            {
+                return false;
+            }
+
+            const authComponents = parseAuthorizationHeader(authHeader[1]);
+            if (!authComponents.headers.includes('x-knot-date') || !authComponents.headers.includes('(request-target)'))
+            {
+                return false;
+            }
+
+            const compts: AuthorizationHeaderComponents = authComponents.algorithm && authComponents.hash ?
+                (authComponents as AuthorizationHeaderComponents) :
+                Object.assign(authComponents, { hash: 'sha256', algorithm: 'ecdsa' });
+
+            return verifyAuthorization(compts, {
+                headers: request.headers,
+                method: request.httpMethod,
+                path: request.path
+            }, this.#options.knotPublicKey);
+        }
+        catch (e)
+        {
+            return false;
+        }
     }
 
     private makeStationRequest(version: string, id: number, action: string, data?: any)
