@@ -1,7 +1,6 @@
 import axios = require('axios');
 import reqSigner = require('@knot/request-signer');
-import { parseAuthorizationHeader, verifyAuthorization } from "@knot/request-signer";
-import type { AuthorizationHeaderComponents } from "@knot/request-signer/dist/utils";
+import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthorization } from '@knot/request-signer';
 
 export enum EventType
 {
@@ -110,17 +109,17 @@ export class KnotSAS
     {
         if (typeof (options) !== 'object')
         {
-            throwError("Options should be an object");
+            throwError('Options should be an object');
         }
         if (options.endpoint !== undefined)
         {
             if (typeof options.endpoint !== 'string')
             {
-                throwError("The given endpoint should be a string");
+                throwError('The given endpoint should be a string');
             }
             if (options.endpoint.length < 3)
             {
-                throwError("The given endpoint is too short to be valid");
+                throwError('The given endpoint is too short to be valid');
             }
             if (options.endpoint.endsWith('/'))
             {
@@ -129,11 +128,11 @@ export class KnotSAS
         }
         if (typeof options.keyId !== 'string')
         {
-            throwError("The given keyId should be a string");
+            throwError('The given keyId should be a string');
         }
         if (typeof options.privateKey !== 'string')
         {
-            throwError("The given privateKey should be a string");
+            throwError('The given privateKey should be a string');
         }
 
         this.#options = options;
