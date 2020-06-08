@@ -15,6 +15,13 @@ export enum EventType
     SPOT_DEFECT = 'spot-defect'
 }
 
+export enum ConfirmLockAnswer
+{
+    ACCEPT = 0,
+    SILENT_ACCEPT = 1,
+    DENY = 2,
+}
+
 type EventBase = {
     event: EventType,
     station: number
@@ -198,7 +205,7 @@ export class KnotSAS
         return this.makeStationRequest('v0.1', id, 'refresh');
     }
 
-    confirmLockSpot(stationId: number, spotId: number, accepted: boolean)
+    confirmLockSpot(stationId: number, spotId: number, accepted: ConfirmLockAnswer)
     {
         return this.makeStationRequest('v0.1', stationId, 'lock-response', {
             spot: spotId,
