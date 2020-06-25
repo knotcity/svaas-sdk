@@ -1,6 +1,6 @@
 import axios = require('axios');
-import reqSigner = require('@knot/request-signer');
-import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthorization } from '@knot/request-signer';
+import reqSigner = require('@knotcity/http-request-signer');
+import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthorization } from '@knotcity/http-request-signer';
 
 export enum EventType
 {
@@ -12,7 +12,8 @@ export enum EventType
     HIGH_TEMP = 'high-temp',
     ENERGY_CRITICAL = 'critical-energy',
     UNEXPECTED_UNLOCK = 'unexpected-unlock',
-    SPOT_DEFECT = 'spot-defect'
+    SPOT_DEFECT = 'spot-defect',
+    BADGE_RFID = 'badge-rfid'
 }
 
 export enum ConfirmLockAnswer
@@ -20,6 +21,13 @@ export enum ConfirmLockAnswer
     ACCEPT = 0,
     SILENT_ACCEPT = 1,
     DENY = 2,
+}
+
+export const enum BadgeReaderStatus
+{
+    LINK = 0,
+    SUCCEEDED = 1,
+    FAILED = 2
 }
 
 type EventBase = {
@@ -80,7 +88,7 @@ export type UnexpectedUnlockEvent = EventBase & {
     }
 };
 
-export type SpotDefectEvents = EventBase & {
+export type SpotDefectEvent = EventBase & {
     event: EventType.SPOT_DEFECT,
     data: {
         spot: number,
@@ -90,7 +98,14 @@ export type SpotDefectEvents = EventBase & {
     }
 };
 
-export type KnotEvent = UnlockedEvent | LockedEvent | BootEvent | StateEvent | ShakeEvent | HighTempEvent | CriticalEnergyEvent | UnexpectedUnlockEvent | SpotDefectEvents;
+export type BadgeRFID = EventBase & {
+    event: EventType.BADGE_RFID,
+    data: {
+        badge_id: string
+    }
+};
+
+export type KnotEvent = UnlockedEvent | LockedEvent | BootEvent | StateEvent | ShakeEvent | HighTempEvent | CriticalEnergyEvent | UnexpectedUnlockEvent | SpotDefectEvent | BadgeRFID;
 
 interface KnotSASOptions
 {
@@ -176,12 +191,12 @@ export class KnotSAS
 
     rebootStation(id: number)
     {
-        return this.makeStationRequest('v0.1', id, 'reboot');
+        return this.makeStationRequest('v1', id, 'reboot');
     }
 
     pingStation(id: number)
     {
-        return this.makeStationRequest('v0.1', id, 'ping');
+        return this.makeStationRequest('v1', id, 'ping');
     }
 
     unlockSpot(stationId: number, spotId: number, unlockId: number)
@@ -194,7 +209,7 @@ export class KnotSAS
         {
             throwError('Unlock ID should be an integer greater or equal to 0');
         }
-        return this.makeStationRequest('v0.1', stationId, 'unlock', {
+        return this.makeStationRequest('v1', stationId, 'unlock', {
             spot: spotId,
             unlock: unlockId
         });
@@ -202,14 +217,21 @@ export class KnotSAS
 
     scanAllStationSpot(id: number)
     {
-        return this.makeStationRequest('v0.1', id, 'refresh');
+        return this.makeStationRequest('v1', id, 'refresh');
     }
 
     confirmLockSpot(stationId: number, spotId: number, accepted: ConfirmLockAnswer)
     {
-        return this.makeStationRequest('v0.1', stationId, 'lock-response', {
+        return this.makeStationRequest('v1', stationId, 'lock-response', {
             spot: spotId,
             accepted
+        });
+    }
+
+    badgeReaderFeedback(stationId: number, status: BadgeReaderStatus)
+    {
+        return this.makeStationRequest('v1', stationId, 'badge', {
+            status
         });
     }
 
