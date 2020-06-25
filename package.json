@@ -1,7 +1,7 @@
 {
-  "name": "@knot/sas-sdk",
-  "version": "0.1.6",
-  "description": "Knot Station As a Service SDK for NodeJS",
+  "name": "@knotcity/saas-sdk",
+  "version": "1.0.0",
+  "description": "Knot Station As A Service SDK for NodeJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -16,14 +16,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^12.12.42",
-    "@typescript-eslint/eslint-plugin": "^3.0.2",
-    "@typescript-eslint/parser": "^3.0.2",
-    "eslint": "^7.1.0",
-    "typescript": "^3.9.3"
+    "@types/node": "^12.12.47",
+    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/parser": "^3.4.0",
+    "eslint": "^7.3.1",
+    "typescript": "^3.9.5"
   },
   "dependencies": {
-    "@knot/request-signer": "0.0.8",
+    "@knotcity/http-request-signer": "0.1.0",
     "axios": "^0.19.2"
   }
 }
