@@ -27,6 +27,14 @@
         "quotes": [
             "error",
             "single"
+        ],
+        "object-curly-spacing": [
+            "error",
+            "always"
+        ],
+        "block-spacing": [
+            "error",
+            "always"
         ]
     }
 }
