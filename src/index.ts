@@ -282,7 +282,6 @@ export class KnotSAS
         const response = await this.#ax.post(`${urn}`, data, {
             validateStatus: (status) => status >= 200 && status < 500
         });
-        console.log(response);
     }
 }
 
