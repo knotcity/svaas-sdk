@@ -109,7 +109,8 @@ export type KnotEvent = UnlockedEvent | LockedEvent | BootEvent | StateEvent | S
 
 interface KnotSASOptions
 {
-    endpoint?: string;
+    stationsEndpoint?: string;
+    vehiclesEndpoint?: string;
     privateKey: string;
     knotPublicKey: string;
     keyId: string;
@@ -133,19 +134,34 @@ export class KnotSAS
         {
             throwError('Options should be an object');
         }
-        if (options.endpoint !== undefined)
+        if (options.stationsEndpoint !== undefined)
         {
-            if (typeof options.endpoint !== 'string')
+            if (typeof options.stationsEndpoint !== 'string')
             {
-                throwError('The given endpoint should be a string');
+                throwError('The given stations endpoint should be a string');
             }
-            if (options.endpoint.length < 3)
+            if (options.stationsEndpoint.length < 3)
             {
-                throwError('The given endpoint is too short to be valid');
+                throwError('The given stations endpoint is too short to be valid');
             }
-            if (options.endpoint.endsWith('/'))
+            if (options.stationsEndpoint.endsWith('/'))
             {
-                options.endpoint = options.endpoint.substr(0, options.endpoint.length - 1);
+                options.stationsEndpoint = options.stationsEndpoint.substr(0, options.stationsEndpoint.length - 1);
+            }
+        }
+        if (options.vehiclesEndpoint !== undefined)
+        {
+            if (typeof options.vehiclesEndpoint !== 'string')
+            {
+                throwError('The given vehicles endpoint should be a string');
+            }
+            if (options.vehiclesEndpoint.length < 3)
+            {
+                throwError('The given vehicles endpoint is too short to be valid');
+            }
+            if (options.vehiclesEndpoint.endsWith('/'))
+            {
+                options.vehiclesEndpoint = options.vehiclesEndpoint.substr(0, options.vehiclesEndpoint.length - 1);
             }
         }
         if (typeof options.keyId !== 'string')
@@ -158,9 +174,7 @@ export class KnotSAS
         }
 
         this.#options = options;
-        this.#ax = axios.default.create({
-            baseURL: this.#options.endpoint || 'https://staas.knotcity.io'
-        });
+        this.#ax = axios.default.create();
         this.#ax.interceptors.request.use(c =>
         {
             c.headers['X-Knot-Date'] = +new Date();
@@ -169,10 +183,11 @@ export class KnotSAS
             c.headers['Content-Length'] = c.data ? JSON.stringify(c.data).length : 0;
             try
             {
+                const url =  c.url ? new URL(c.url) : undefined;
                 c.headers['Authorization'] = reqSigner.generateAuthorization({
                     headers: c.headers,
                     method: c.method || 'POST',
-                    path: c.url || '/'
+                    path: url?.href.split(url.origin)[1] || '/'
                 }, {
                     algorithm: 'ecdsa',
                     hash: 'sha256',
@@ -212,6 +227,36 @@ export class KnotSAS
         return this.makeStationRequest('v1', stationId, 'unlock', {
             spot: spotId,
             unlock: unlockId
+        });
+    }
+
+    unlockVehicle(vehicleId: number, unlockId: number)
+    {
+        if (!Number.isInteger(vehicleId) || vehicleId < 0)
+        {
+            throwError('Spot ID should be an integer greater or equal to 0');
+        }
+        if (!Number.isInteger(unlockId) || unlockId < 0)
+        {
+            throwError('Unlock ID should be an integer greater or equal to 0');
+        }
+        return this.makeVehicleRequest('v1', vehicleId, 'unlock', {
+            unlock: unlockId
+        });
+    }
+
+    lockVehicle(vehicleId: number, lockId: number)
+    {
+        if (!Number.isInteger(vehicleId) || vehicleId < 0)
+        {
+            throwError('Spot ID should be an integer greater or equal to 0');
+        }
+        if (!Number.isInteger(lockId) || lockId < 0)
+        {
+            throwError('Lock ID should be an integer greater or equal to 0');
+        }
+        return this.makeVehicleRequest('v1', vehicleId, 'lock', {
+            lock: lockId
         });
     }
 
@@ -274,12 +319,21 @@ export class KnotSAS
         {
             throwError('Station ID should be an integer greater or equal to 1');
         }
-        return this.makeRequest(`/${version}/${id}/${action}`, data);
+        return this.makeRequest(`${this.#options.stationsEndpoint || 'https://staas.knotcity.io'}/${version}/${id}/${action}`, data);
     }
 
-    private async makeRequest(urn: string, data?: any)
+    private makeVehicleRequest(version: string, id: number, action: string, data?: any)
     {
-        const response = await this.#ax.post(`${urn}`, data, {
+        if (!Number.isInteger(id) || id < 1)
+        {
+            throwError('Station ID should be an integer greater or equal to 1');
+        }
+        return this.makeRequest(`${this.#options.vehiclesEndpoint || 'https://vaas.knotcity.io'}/${version}/${id}/${action}`, data);
+    }
+
+    private async makeRequest(url: string, data?: any)
+    {
+        await this.#ax.post(`${url}`, data, {
             validateStatus: (status) => status >= 200 && status < 500
         });
     }
