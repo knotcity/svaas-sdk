@@ -260,6 +260,21 @@ export class KnotSAS
         });
     }
 
+    soundVehicle(vehicleId: number, soundType: 'geo-fence' | 'toot'| 'low_battery')
+    {
+        if (!Number.isInteger(vehicleId) || vehicleId < 0)
+        {
+            throwError('Spot ID should be an integer greater or equal to 0');
+        }
+        if (soundType != 'geo-fence' && soundType !=  'toot' && soundType !=  'low_battery')
+        {
+            throwError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
+        }
+        return this.makeVehicleRequest('v1', vehicleId, 'sound', {
+            sound_type: soundType
+        });
+    }
+
     scanAllStationSpot(id: number)
     {
         return this.makeStationRequest('v1', id, 'refresh');
