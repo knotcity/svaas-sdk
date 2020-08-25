@@ -238,7 +238,7 @@ export class KnotSAS
 
     unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
     {
-        if (!Number.isInteger(vehicleId) || vehicleId < 0)
+        if (!Number.isInteger(vehicleId) || vehicleId < 1)
         {
             throwError('Spot ID should be an integer greater or equal to 0');
         }
@@ -253,7 +253,7 @@ export class KnotSAS
 
     lockVehicle(vehicleId: number, lockId: number): Promise<RequestResults>
     {
-        if (!Number.isInteger(vehicleId) || vehicleId < 0)
+        if (!Number.isInteger(vehicleId) || vehicleId < 1)
         {
             throwError('Spot ID should be an integer greater or equal to 0');
         }
@@ -268,7 +268,7 @@ export class KnotSAS
 
     emitVehicleSound(vehicleId: number, soundType: 'geo-fence' | 'toot' | 'low_battery'): Promise<RequestResults>
     {
-        if (!Number.isInteger(vehicleId) || vehicleId < 0)
+        if (!Number.isInteger(vehicleId) || vehicleId < 1)
         {
             throwError('Spot ID should be an integer greater or equal to 0');
         }
