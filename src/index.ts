@@ -311,6 +311,11 @@ export class KnotSAS
         return requestResults;
     }
 
+    enableStation(stationId: number): Promise<RequestResults>
+    {
+        return this.makeStationRequest('POST', 'v1', stationId, 'enable');
+    }
+
     checkKnotRequestSignature(request: SignatureRequest)
     {
         try
