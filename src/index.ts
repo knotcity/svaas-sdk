@@ -266,7 +266,7 @@ export class KnotSAS
         });
     }
 
-    soundVehicle(vehicleId: number, soundType: 'geo-fence' | 'toot'| 'low_battery'): Promise<RequestResults>
+    emitVehicleSound(vehicleId: number, soundType: 'geo-fence' | 'toot' | 'low_battery'): Promise<RequestResults>
     {
         if (!Number.isInteger(vehicleId) || vehicleId < 0)
         {
@@ -301,12 +301,12 @@ export class KnotSAS
         });
     }
 
-    async getStationInformation(stationId: number): Promise<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>
+    async getStationInformation(stationId: number): Promise<RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', stationId, '');
-        if (requestResults.activation_date)
+        if (requestResults.data.activation_date)
         {
-            requestResults.activation_date = new Date(requestResults.activation_date);
+            requestResults.data.activation_date = new Date(requestResults.data.activation_date);
         }
         return requestResults;
     }
@@ -370,7 +370,7 @@ export class KnotSAS
             url,
             validateStatus: (status) => status >= 200 && status < 500
         });
-        return results.data;
+        return results.data as RequestResults<any>;
     }
 }
 
