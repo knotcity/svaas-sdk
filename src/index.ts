@@ -117,7 +117,6 @@ export enum EventVehicleType
     UNLOCKED = 'unlocked',
     LOCKED = 'locked',
     LOCATION = 'location',
-    BATTERY = 'battery',
     STATUS = 'status'
 }
 
