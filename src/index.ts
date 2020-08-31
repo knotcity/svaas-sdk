@@ -117,7 +117,8 @@ export enum EventVehicleType
     UNLOCKED = 'unlocked',
     LOCKED = 'locked',
     LOCATION = 'location',
-    STATUS = 'status'
+    STATUS = 'status',
+    LOCK_FAILED = 'lock-failed'
 }
 
 export enum VehicleSoundType
@@ -168,7 +169,14 @@ export type StatusVehicleEvent = EventVehicleBase & {
     }
 };
 
-export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | LocationVehicleEvent | StatusVehicleEvent;
+export type LockFailedVehicleEvent = EventVehicleBase & {
+    event: EventVehicleType.LOCK_FAILED,
+    data: {
+        message: string
+    }
+};
+
+export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | LocationVehicleEvent | StatusVehicleEvent | LockFailedVehicleEvent;
 //#endregion Vehicle events
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
