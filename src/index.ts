@@ -116,14 +116,14 @@ export enum EventVehicleType
     DISCONNECTED = 'disconnected',
     UNLOCKED = 'unlocked',
     LOCKED = 'locked',
-    UPDATED_POSITION = 'update-position',
-    UPDATED_BATTERY = 'update-battery',
+    LOCATION = 'location',
+    BATTERY = 'battery',
     STATUS = 'status'
 }
 
-export enum vehicleSoundType
+export enum VehicleSoundType
 {
-    'GEO-FENCE' = 'geo-fence',
+    GEO_FENCE = 'geo-fence',
     TOOT = 'toot',
     LOW_BATTERY = 'low_battery'
 }
@@ -149,7 +149,7 @@ export type LockedVehicleEvent = EventVehicleBase & {
 };
 
 export type LocationVehicleEvent = EventVehicleBase & {
-    event: EventVehicleType.UPDATED_BATTERY,
+    event: EventVehicleType.LOCATION,
     data: {
         status: 'valid',
         latitude: number,
@@ -196,6 +196,8 @@ interface SignatureRequest
 }
 
 export type stationInformation = RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>;
+export type stationsEnabled = RequestResults<{ station_id: number, spots_count: number, activation_date: Date }[]>;
+export type stationsDisabled = RequestResults<{ station_id: number, spots_count: number }[]>;
 
 export class KnotSAS
 {
@@ -280,22 +282,18 @@ export class KnotSAS
 
     // Station command
 
-    rebootStation(id: number): Promise<RequestResults>
+    rebootStation(stationId: number): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', id, 'reboot');
+        return this.makeStationRequest('POST', 'v1', 'reboot', stationId);
     }
 
-    pingStation(id: number): Promise<RequestResults>
+    pingStation(stationId: number): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', id, 'ping');
+        return this.makeStationRequest('POST', 'v1', 'ping', stationId);
     }
 
     unlockSpot(stationId: number, spotId: number, unlockId: number): Promise<RequestResults>
     {
-        if (!Number.isInteger(spotId) || spotId < 1)
-        {
-            throwError('Station ID should be an integer greater or equal to 1');
-        }
         if (!Number.isInteger(spotId) || spotId < 1)
         {
             throwError('Spot ID should be an integer greater or equal to 1');
@@ -304,20 +302,20 @@ export class KnotSAS
         {
             throwError('Unlock ID should be an integer greater or equal to 0');
         }
-        return this.makeStationRequest('POST', 'v1', stationId, 'unlock', {
+        return this.makeStationRequest('POST', 'v1', 'unlock', stationId, {
             spot: spotId,
             unlock: unlockId
         });
     }
 
-    scanAllStationSpot(id: number): Promise<RequestResults>
+    scanAllStationSpot(stationId: number): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', id, 'refresh');
+        return this.makeStationRequest('POST', 'v1', 'refresh', stationId);
     }
 
     confirmLockSpot(stationId: number, spotId: number, accepted: ConfirmLockAnswer): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', stationId, 'lock-response', {
+        return this.makeStationRequest('POST', 'v1', 'lock-response', stationId, {
             spot: spotId,
             accepted
         });
@@ -325,14 +323,19 @@ export class KnotSAS
 
     badgeReaderFeedback(stationId: number, status: BadgeReaderStatus): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', stationId, 'badge', {
+        return this.makeStationRequest('POST', 'v1', 'badge', stationId, {
             status
         });
     }
 
+    enableStation(stationId: number): Promise<RequestResults>
+    {
+        return this.makeStationRequest('POST', 'v1', 'enable', stationId);
+    }
+
     async getStationInformation(stationId: number): Promise<stationInformation>
     {
-        const requestResults = await this.makeStationRequest('GET', 'v1', stationId, '');
+        const requestResults = await this.makeStationRequest('GET', 'v1', '', stationId);
         if (requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
@@ -340,19 +343,30 @@ export class KnotSAS
         return requestResults;
     }
 
-    enableStation(stationId: number): Promise<RequestResults>
+    async getStationEnabled(): Promise<stationsEnabled>
     {
-        return this.makeStationRequest('POST', 'v1', stationId, 'enable');
+        const requestResults = await this.makeStationRequest('GET', 'v1', 'enabled');
+        if (requestResults.data.activation_date)
+        {
+            requestResults.data.activation_date = new Date(requestResults.data.activation_date);
+        }
+        return requestResults;
+    }
+
+    async getStationDisabled(): Promise<stationsDisabled>
+    {
+        const requestResults = await this.makeStationRequest('GET', 'v1', 'disabled');
+        if (requestResults.data.activation_date)
+        {
+            requestResults.data.activation_date = new Date(requestResults.data.activation_date);
+        }
+        return requestResults;
     }
 
     // Vehicle command
 
     unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
     {
-        if (!Number.isInteger(vehicleId) || vehicleId < 1)
-        {
-            throwError('Vehicle ID should be an integer greater or equal to 1');
-        }
         if (!Number.isInteger(unlockId) || unlockId < 0)
         {
             throwError('Unlock ID should be an integer greater or equal to 0');
@@ -364,10 +378,6 @@ export class KnotSAS
 
     lockVehicle(vehicleId: number, lockId: number): Promise<RequestResults>
     {
-        if (!Number.isInteger(vehicleId) || vehicleId < 1)
-        {
-            throwError('Vehicle ID should be an integer greater or equal to 1');
-        }
         if (!Number.isInteger(lockId) || lockId < 0)
         {
             throwError('Lock ID should be an integer greater or equal to 0');
@@ -379,10 +389,6 @@ export class KnotSAS
 
     emitVehicleSound(vehicleId: number, soundType: 'geo-fence' | 'toot' | 'low_battery'): Promise<RequestResults>
     {
-        if (!Number.isInteger(vehicleId) || vehicleId < 1)
-        {
-            throwError('Vehicle ID should be an integer greater or equal to 1');
-        }
         if (soundType != 'geo-fence' && soundType !=  'toot' && soundType !=  'low_battery')
         {
             throwError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
@@ -394,10 +400,6 @@ export class KnotSAS
 
     openVehicleBatteryCover(vehicleId: number)
     {
-        if (!Number.isInteger(vehicleId) || vehicleId < 1)
-        {
-            throwError('Vehicle ID should be an integer greater or equal to 1');
-        }
         return this.makeVehicleRequest('POST', 'v1', vehicleId, 'battery-cover');
     }
 
@@ -441,20 +443,40 @@ export class KnotSAS
         }
     }
 
-    private makeStationRequest(method: axios.Method, version: string, id: number, action: string, data?: any)
+    async getVehicleInformation(vehicleId: number): Promise<stationInformation>
     {
-        if (!Number.isInteger(id) || id < 1)
+        const requestResults = await this.makeVehicleRequest('GET', 'v1', vehicleId, '');
+        if (requestResults.data.activation_date)
         {
-            throwError('Station ID should be an integer greater or equal to 1');
+            requestResults.data.activation_date = new Date(requestResults.data.activation_date);
         }
-        return this.makeRequest(method, `${this.#options.stationsEndpoint || 'https://staas.knotcity.io'}/${version}/${id}/${action}`, data);
+        return requestResults;
+    }
+
+    private makeStationRequest(method: axios.Method, version: string, action: string, id?: number, data?: any)
+    {
+        let path: string;
+        if (id)
+        {
+            if (!Number.isInteger(id) || id < 1)
+            {
+                throwError('Station ID should be an integer greater or equal to 1');
+            }
+            path = `/${version}/${id}/${action}`;
+        }
+        else
+        {
+            path = `/${version}/${action}`;
+        }
+
+        return this.makeRequest(method, `${this.#options.stationsEndpoint || 'https://staas.knotcity.io'}${path}`, data);
     }
 
     private makeVehicleRequest(method: axios.Method, version: string, id: number, action: string, data?: any)
     {
         if (!Number.isInteger(id) || id < 1)
         {
-            throwError('Station ID should be an integer greater or equal to 1');
+            throwError('Vehicle ID should be an integer greater or equal to 1');
         }
         return this.makeRequest(method, `${this.#options.vehiclesEndpoint || 'https://vaas.knotcity.io'}/${version}/${id}/${action}`, data);
     }
