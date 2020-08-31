@@ -2,7 +2,6 @@ import axios = require('axios');
 import reqSigner = require('@knotcity/http-request-signer');
 import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthorization } from '@knotcity/http-request-signer';
 
-
 // Station event
 export enum EventStationType
 {
@@ -342,24 +341,18 @@ export class KnotSAS
         return requestResults;
     }
 
-    async getStationEnabled(): Promise<stationsEnabled>
+    async getEnabledStations(): Promise<stationsEnabled>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', 'enabled');
-        if (requestResults.data.activation_date)
-        {
-            requestResults.data.activation_date = new Date(requestResults.data.activation_date);
-        }
-        return requestResults;
+        return requestResults.data.map((r: any) => {
+            r.activation_date = new Date(r.data.activation_date);
+            return r;
+        });
     }
 
-    async getStationDisabled(): Promise<stationsDisabled>
+    async getDisabledStations(): Promise<stationsDisabled>
     {
-        const requestResults = await this.makeStationRequest('GET', 'v1', 'disabled');
-        if (requestResults.data.activation_date)
-        {
-            requestResults.data.activation_date = new Date(requestResults.data.activation_date);
-        }
-        return requestResults;
+        return await this.makeStationRequest('GET', 'v1', 'disabled');
     }
 
     // Vehicle command
