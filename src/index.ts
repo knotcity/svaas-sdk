@@ -2,7 +2,9 @@ import axios = require('axios');
 import reqSigner = require('@knotcity/http-request-signer');
 import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthorization } from '@knotcity/http-request-signer';
 
-export enum EventType
+
+// Station event
+export enum EventStationType
 {
     UNLOCKED = 'unlocked',
     LOCKED = 'locked',
@@ -30,21 +32,21 @@ export const enum BadgeReaderStatus
     FAILED = 2
 }
 
-type EventBase = {
-    event: EventType,
+type EventStationBase = {
+    event: EventStationType,
     station: number
 }
 
-export type UnlockedEvent = EventBase & {
-    event: EventType.UNLOCKED,
+export type UnlockedStationEvent = EventStationBase & {
+    event: EventStationType.UNLOCKED,
     data: {
         spot: number,
         unlock: number
     }
 };
 
-export type LockedEvent = {
-    event: EventType.LOCKED,
+export type LockedStationEvent = {
+    event: EventStationType.LOCKED,
     data: {
         spot: number,
         vehicle: number,
@@ -53,43 +55,43 @@ export type LockedEvent = {
     }
 };
 
-export type BootEvent = EventBase & {
-    event: EventType.BOOT,
+export type BootStationEvent = EventStationBase & {
+    event: EventStationType.BOOT,
 };
 
-export type StateEvent = EventBase & {
-    event: EventType.STATE,
+export type StateStationEvent = EventStationBase & {
+    event: EventStationType.STATE,
     data: {
         mainboard: number,
         vehicles: number[]
     }
 };
 
-export type ShakeEvent = EventBase & {
-    event: EventType.SHAKE,
+export type ShakeStationEvent = EventStationBase & {
+    event: EventStationType.SHAKE,
 };
 
-export type HighTempEvent = EventBase & {
-    event: EventType.HIGH_TEMP,
+export type HighTempStationEvent = EventStationBase & {
+    event: EventStationType.HIGH_TEMP,
     data: {
         temperature: number,
         critical: boolean
     }
 };
 
-export type CriticalEnergyEvent = EventBase & {
-    event: EventType.ENERGY_CRITICAL,
+export type CriticalEnergyStationEvent = EventStationBase & {
+    event: EventStationType.ENERGY_CRITICAL,
 };
 
-export type UnexpectedUnlockEvent = EventBase & {
-    event: EventType.UNEXPECTED_UNLOCK,
+export type UnexpectedUnlockStationEvent = EventStationBase & {
+    event: EventStationType.UNEXPECTED_UNLOCK,
     data: {
         spot: number
     }
 };
 
-export type SpotDefectEvent = EventBase & {
-    event: EventType.SPOT_DEFECT,
+export type SpotDefectStationEvent = EventStationBase & {
+    event: EventStationType.SPOT_DEFECT,
     data: {
         spot: number,
         vehicle: number,
@@ -98,20 +100,84 @@ export type SpotDefectEvent = EventBase & {
     }
 };
 
-export type BadgeRFID = EventBase & {
-    event: EventType.BADGE_RFID,
+export type BadgeRFIDStationEvent = EventStationBase & {
+    event: EventStationType.BADGE_RFID,
     data: {
         badge_id: string
     }
 };
+
+export type KnotStationEvent = UnlockedStationEvent | LockedStationEvent | BootStationEvent | StateStationEvent | ShakeStationEvent | HighTempStationEvent | CriticalEnergyStationEvent | UnexpectedUnlockStationEvent | SpotDefectStationEvent | BadgeRFIDStationEvent;
+
+// Vehicle event
+export enum EventVehicleType
+{
+    CONNECTED = 'connected',
+    DISCONNECTED = 'disconnected',
+    UNLOCKED = 'unlocked',
+    LOCKED = 'locked',
+    UPDATED_POSITION = 'update-position',
+    UPDATED_BATTERY = 'update-battery',
+    STATUS = 'status'
+}
+
+export enum vehicleSoundType
+{
+    'GEO-FENCE' = 'geo-fence',
+    TOOT = 'toot',
+    LOW_BATTERY = 'low_battery'
+}
+
+
+type EventVehicleBase = {
+    event: EventVehicleType,
+    vehicle: number
+}
+
+export type UnlockedVehicleEvent = EventVehicleBase & {
+    event: EventVehicleType.UNLOCKED,
+    data: {
+        unlock: number
+    }
+};
+
+export type LockedVehicleEvent = EventVehicleBase & {
+    event: EventVehicleType.LOCKED,
+    data: {
+        lock: number
+    }
+};
+
+export type LocationVehicleEvent = EventVehicleBase & {
+    event: EventVehicleType.UPDATED_BATTERY,
+    data: {
+        status: 'valid',
+        latitude: number,
+        longitude: number
+    } | {
+        status: 'invalid',
+    }
+};
+
+export type StatusVehicleEvent = EventVehicleBase & {
+    event: EventVehicleType.STATUS,
+    data: {
+        online: boolean,
+        locked: boolean,
+        batteryPercentage: number,
+        odometer: number
+    }
+};
+
+export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | LocationVehicleEvent | StatusVehicleEvent;
+
+export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
 
 export type RequestResults<T = undefined> = {
     code: number;
     message: string;
     data: T
 }
-
-export type KnotEvent = UnlockedEvent | LockedEvent | BootEvent | StateEvent | ShakeEvent | HighTempEvent | CriticalEnergyEvent | UnexpectedUnlockEvent | SpotDefectEvent | BadgeRFID;
 
 interface KnotSASOptions
 {
@@ -128,6 +194,8 @@ interface SignatureRequest
     httpMethod: string,
     path: string
 }
+
+export type stationInformation = RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>;
 
 export class KnotSAS
 {
@@ -210,6 +278,8 @@ export class KnotSAS
         });
     }
 
+    // Station command
+
     rebootStation(id: number): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', id, 'reboot');
@@ -224,6 +294,10 @@ export class KnotSAS
     {
         if (!Number.isInteger(spotId) || spotId < 1)
         {
+            throwError('Station ID should be an integer greater or equal to 1');
+        }
+        if (!Number.isInteger(spotId) || spotId < 1)
+        {
             throwError('Spot ID should be an integer greater or equal to 1');
         }
         if (!Number.isInteger(unlockId) || unlockId < 0)
@@ -233,51 +307,6 @@ export class KnotSAS
         return this.makeStationRequest('POST', 'v1', stationId, 'unlock', {
             spot: spotId,
             unlock: unlockId
-        });
-    }
-
-    unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
-    {
-        if (!Number.isInteger(vehicleId) || vehicleId < 1)
-        {
-            throwError('Spot ID should be an integer greater or equal to 0');
-        }
-        if (!Number.isInteger(unlockId) || unlockId < 0)
-        {
-            throwError('Unlock ID should be an integer greater or equal to 0');
-        }
-        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'unlock', {
-            unlock: unlockId
-        });
-    }
-
-    lockVehicle(vehicleId: number, lockId: number): Promise<RequestResults>
-    {
-        if (!Number.isInteger(vehicleId) || vehicleId < 1)
-        {
-            throwError('Spot ID should be an integer greater or equal to 0');
-        }
-        if (!Number.isInteger(lockId) || lockId < 0)
-        {
-            throwError('Lock ID should be an integer greater or equal to 0');
-        }
-        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'lock', {
-            lock: lockId
-        });
-    }
-
-    emitVehicleSound(vehicleId: number, soundType: 'geo-fence' | 'toot' | 'low_battery'): Promise<RequestResults>
-    {
-        if (!Number.isInteger(vehicleId) || vehicleId < 1)
-        {
-            throwError('Spot ID should be an integer greater or equal to 0');
-        }
-        if (soundType != 'geo-fence' && soundType !=  'toot' && soundType !=  'low_battery')
-        {
-            throwError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
-        }
-        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'sound', {
-            sound_type: soundType
         });
     }
 
@@ -301,7 +330,7 @@ export class KnotSAS
         });
     }
 
-    async getStationInformation(stationId: number): Promise<RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>>
+    async getStationInformation(stationId: number): Promise<stationInformation>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', stationId, '');
         if (requestResults.data.activation_date)
@@ -315,6 +344,69 @@ export class KnotSAS
     {
         return this.makeStationRequest('POST', 'v1', stationId, 'enable');
     }
+
+    // Vehicle command
+
+    unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
+    {
+        if (!Number.isInteger(vehicleId) || vehicleId < 1)
+        {
+            throwError('Vehicle ID should be an integer greater or equal to 1');
+        }
+        if (!Number.isInteger(unlockId) || unlockId < 0)
+        {
+            throwError('Unlock ID should be an integer greater or equal to 0');
+        }
+        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'unlock', {
+            unlock: unlockId
+        });
+    }
+
+    lockVehicle(vehicleId: number, lockId: number): Promise<RequestResults>
+    {
+        if (!Number.isInteger(vehicleId) || vehicleId < 1)
+        {
+            throwError('Vehicle ID should be an integer greater or equal to 1');
+        }
+        if (!Number.isInteger(lockId) || lockId < 0)
+        {
+            throwError('Lock ID should be an integer greater or equal to 0');
+        }
+        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'lock', {
+            lock: lockId
+        });
+    }
+
+    emitVehicleSound(vehicleId: number, soundType: 'geo-fence' | 'toot' | 'low_battery'): Promise<RequestResults>
+    {
+        if (!Number.isInteger(vehicleId) || vehicleId < 1)
+        {
+            throwError('Vehicle ID should be an integer greater or equal to 1');
+        }
+        if (soundType != 'geo-fence' && soundType !=  'toot' && soundType !=  'low_battery')
+        {
+            throwError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
+        }
+        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'sound', {
+            sound_type: soundType
+        });
+    }
+
+    openVehicleBatteryCover(vehicleId: number)
+    {
+        if (!Number.isInteger(vehicleId) || vehicleId < 1)
+        {
+            throwError('Vehicle ID should be an integer greater or equal to 1');
+        }
+        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'battery-cover');
+    }
+
+    enableVehicle(vehicleId: number): Promise<RequestResults>
+    {
+        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'enable');
+    }
+
+    // Signature
 
     checkKnotRequestSignature(request: SignatureRequest)
     {
