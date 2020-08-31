@@ -345,10 +345,11 @@ export class KnotSAS
     async getEnabledStations(): Promise<EnabledStations>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', 'enabled');
-        return requestResults.data.map((r: any) => {
+        requestResults.data.forEach((r: any) => {
             r.activation_date = new Date(r.data.activation_date);
             return r;
         });
+        return requestResults;
     }
 
     async getDisabledStations(): Promise<DisabledStations>
