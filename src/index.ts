@@ -2,7 +2,7 @@ import axios = require('axios');
 import reqSigner = require('@knotcity/http-request-signer');
 import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthorization } from '@knotcity/http-request-signer';
 
-// Station event
+//#region Station events
 export enum EventStationType
 {
     UNLOCKED = 'unlocked',
@@ -107,8 +107,9 @@ export type BadgeRFIDStationEvent = EventStationBase & {
 };
 
 export type KnotStationEvent = UnlockedStationEvent | LockedStationEvent | BootStationEvent | StateStationEvent | ShakeStationEvent | HighTempStationEvent | CriticalEnergyStationEvent | UnexpectedUnlockStationEvent | SpotDefectStationEvent | BadgeRFIDStationEvent;
+//#endregion Station events
 
-// Vehicle event
+//#region Vehicle events
 export enum EventVehicleType
 {
     CONNECTED = 'connected',
@@ -168,6 +169,7 @@ export type StatusVehicleEvent = EventVehicleBase & {
 };
 
 export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | LocationVehicleEvent | StatusVehicleEvent;
+//#endregion Vehicle events
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
 
@@ -193,9 +195,9 @@ interface SignatureRequest
     path: string
 }
 
-export type stationInformation = RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>;
-export type stationsEnabled = RequestResults<{ station_id: number, spots_count: number, activation_date: Date }[]>;
-export type stationsDisabled = RequestResults<{ station_id: number, spots_count: number }[]>;
+export type StationInformation = RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>;
+export type EnabledStations = RequestResults<{ station_id: number, spots_count: number, activation_date: Date }[]>;
+export type DisabledStations = RequestResults<{ station_id: number, spots_count: number }[]>;
 
 export class KnotSAS
 {
@@ -278,8 +280,7 @@ export class KnotSAS
         });
     }
 
-    // Station command
-
+    //#region Station commands
     rebootStation(stationId: number): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'reboot', stationId);
@@ -331,7 +332,7 @@ export class KnotSAS
         return this.makeStationRequest('POST', 'v1', 'enable', stationId);
     }
 
-    async getStationInformation(stationId: number): Promise<stationInformation>
+    async getStationInformation(stationId: number): Promise<StationInformation>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', '', stationId);
         if (requestResults.data.activation_date)
@@ -341,7 +342,7 @@ export class KnotSAS
         return requestResults;
     }
 
-    async getEnabledStations(): Promise<stationsEnabled>
+    async getEnabledStations(): Promise<EnabledStations>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', 'enabled');
         return requestResults.data.map((r: any) => {
@@ -350,13 +351,13 @@ export class KnotSAS
         });
     }
 
-    async getDisabledStations(): Promise<stationsDisabled>
+    async getDisabledStations(): Promise<DisabledStations>
     {
         return await this.makeStationRequest('GET', 'v1', 'disabled');
     }
+    //#endregion Station commands
 
-    // Vehicle command
-
+    //#region Vehicle commands
     unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
     {
         if (!Number.isInteger(unlockId) || unlockId < 0)
@@ -399,9 +400,9 @@ export class KnotSAS
     {
         return this.makeVehicleRequest('POST', 'v1', vehicleId, 'enable');
     }
+    //#endregion Vehicle commands
 
-    // Signature
-
+    // Signature validation
     checkKnotRequestSignature(request: SignatureRequest)
     {
         try
@@ -435,7 +436,7 @@ export class KnotSAS
         }
     }
 
-    async getVehicleInformation(vehicleId: number): Promise<stationInformation>
+    async getVehicleInformation(vehicleId: number): Promise<StationInformation>
     {
         const requestResults = await this.makeVehicleRequest('GET', 'v1', vehicleId, '');
         if (requestResults.data.activation_date)
