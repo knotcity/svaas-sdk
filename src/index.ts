@@ -297,9 +297,9 @@ export class KnotSAS
         {
             throwError('Spot ID should be an integer greater or equal to 1');
         }
-        if (!Number.isInteger(unlockId) || unlockId < 0)
+        if (!Number.isInteger(unlockId) || unlockId < 1)
         {
-            throwError('Unlock ID should be an integer greater or equal to 0');
+            throwError('Unlock ID should be an integer greater or equal to 1');
         }
         return this.makeStationRequest('POST', 'v1', 'unlock', stationId, {
             spot: spotId,
@@ -361,9 +361,9 @@ export class KnotSAS
     //#region Vehicle commands
     unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
     {
-        if (!Number.isInteger(unlockId) || unlockId < 0)
+        if (!Number.isInteger(unlockId) || unlockId < 1)
         {
-            throwError('Unlock ID should be an integer greater or equal to 0');
+            throwError('Unlock ID should be an integer greater or equal to 1');
         }
         return this.makeVehicleRequest('POST', 'v1', vehicleId, 'unlock', {
             unlock: unlockId
@@ -372,9 +372,9 @@ export class KnotSAS
 
     lockVehicle(vehicleId: number, lockId: number): Promise<RequestResults>
     {
-        if (!Number.isInteger(lockId) || lockId < 0)
+        if (!Number.isInteger(lockId) || lockId < 1)
         {
-            throwError('Lock ID should be an integer greater or equal to 0');
+            throwError('Lock ID should be an integer greater or equal to 1');
         }
         return this.makeVehicleRequest('POST', 'v1', vehicleId, 'lock', {
             lock: lockId
