@@ -137,14 +137,16 @@ type EventVehicleBase = {
 export type UnlockedVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.UNLOCKED,
     data: {
-        unlock: number
+        unlock: number,
+        time: number
     }
 };
 
 export type LockedVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.LOCKED,
     data: {
-        lock: number
+        lock: number,
+        time: number
     }
 };
 
