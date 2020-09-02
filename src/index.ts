@@ -107,6 +107,10 @@ export type BadgeRFIDStationEvent = EventStationBase & {
 };
 
 export type KnotStationEvent = UnlockedStationEvent | LockedStationEvent | BootStationEvent | StateStationEvent | ShakeStationEvent | HighTempStationEvent | CriticalEnergyStationEvent | UnexpectedUnlockStationEvent | SpotDefectStationEvent | BadgeRFIDStationEvent;
+
+export type StationInformation = RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>;
+export type EnabledStations = RequestResults<{ station_id: number, spots_count: number, activation_date: Date }[]>;
+export type DisabledStations = RequestResults<{ station_id: number, spots_count: number }[]>;
 //#endregion Station events
 
 //#region Vehicle events
@@ -179,6 +183,10 @@ export type LockFailedVehicleEvent = EventVehicleBase & {
 };
 
 export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | LocationVehicleEvent | StatusVehicleEvent | LockFailedVehicleEvent;
+
+export type VehicleInformation = RequestResults<{ model_name: string, activation_date: Date | null, vehicle_id: number, model_type: string, manufacturer: string }>;
+export type EnabledVehicles = RequestResults<{ vehicle_id: number, activation_date: Date }[]>;
+export type DisabledVehicles = RequestResults<{ vehicle_id: number }[]>;
 //#endregion Vehicle events
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
@@ -204,10 +212,6 @@ interface SignatureRequest
     httpMethod: string,
     path: string
 }
-
-export type StationInformation = RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>;
-export type EnabledStations = RequestResults<{ station_id: number, spots_count: number, activation_date: Date }[]>;
-export type DisabledStations = RequestResults<{ station_id: number, spots_count: number }[]>;
 
 export class KnotSAS
 {
@@ -375,7 +379,7 @@ export class KnotSAS
         {
             throwError('Unlock ID should be an integer greater or equal to 1');
         }
-        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'unlock', {
+        return this.makeVehicleRequest('POST', 'v1', 'unlock', vehicleId, {
             unlock: unlockId
         });
     }
@@ -386,7 +390,7 @@ export class KnotSAS
         {
             throwError('Lock ID should be an integer greater or equal to 1');
         }
-        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'lock', {
+        return this.makeVehicleRequest('POST', 'v1', 'lock', vehicleId, {
             lock: lockId
         });
     }
@@ -397,19 +401,44 @@ export class KnotSAS
         {
             throwError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
         }
-        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'sound', {
+        return this.makeVehicleRequest('POST', 'v1', 'sound', vehicleId, {
             sound_type: soundType
         });
     }
 
     openVehicleBatteryCover(vehicleId: number)
     {
-        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'battery-cover');
+        return this.makeVehicleRequest('POST', 'v1', 'battery-cover', vehicleId);
     }
 
     enableVehicle(vehicleId: number): Promise<RequestResults>
     {
-        return this.makeVehicleRequest('POST', 'v1', vehicleId, 'enable');
+        return this.makeVehicleRequest('POST', 'v1', 'enable', vehicleId);
+    }
+
+    async getVehicleInformation(vehicleId: number): Promise<VehicleInformation>
+    {
+        const requestResults = await this.makeVehicleRequest('GET', 'v1', '', vehicleId);
+        if (requestResults.data.activation_date)
+        {
+            requestResults.data.activation_date = new Date(requestResults.data.activation_date);
+        }
+        return requestResults;
+    }
+
+    async getEnabledVehicles(): Promise<EnabledVehicles>
+    {
+        const requestResults = await this.makeVehicleRequest('GET', 'v1', 'enabled');
+        requestResults.data.forEach((r: any) => {
+            r.activation_date = new Date(r.data.activation_date);
+            return r;
+        });
+        return requestResults;
+    }
+
+    async getDisabledVehicles(): Promise<DisabledVehicles>
+    {
+        return await this.makeVehicleRequest('GET', 'v1', 'disabled');
     }
     //#endregion Vehicle commands
 
@@ -447,16 +476,6 @@ export class KnotSAS
         }
     }
 
-    async getVehicleInformation(vehicleId: number): Promise<StationInformation>
-    {
-        const requestResults = await this.makeVehicleRequest('GET', 'v1', vehicleId, '');
-        if (requestResults.data.activation_date)
-        {
-            requestResults.data.activation_date = new Date(requestResults.data.activation_date);
-        }
-        return requestResults;
-    }
-
     private makeStationRequest(method: axios.Method, version: string, action: string, id?: number, data?: any)
     {
         let path: string;
@@ -476,13 +495,22 @@ export class KnotSAS
         return this.makeRequest(method, `${this.#options.stationsEndpoint || 'https://staas.knotcity.io'}${path}`, data);
     }
 
-    private makeVehicleRequest(method: axios.Method, version: string, id: number, action: string, data?: any)
+    private makeVehicleRequest(method: axios.Method, version: string, action: string, id?: number, data?: any)
     {
-        if (!Number.isInteger(id) || id < 1)
+        let path: string;
+        if (id)
         {
-            throwError('Vehicle ID should be an integer greater or equal to 1');
+            if (!Number.isInteger(id) || id < 1)
+            {
+                throwError('Vehicle ID should be an integer greater or equal to 1');
+            }
+            path = `/${version}/${id}/${action}`;
         }
-        return this.makeRequest(method, `${this.#options.vehiclesEndpoint || 'https://vaas.knotcity.io'}/${version}/${id}/${action}`, data);
+        else
+        {
+            path = `/${version}/${action}`;
+        }
+        return this.makeRequest(method, `${this.#options.vehiclesEndpoint || 'https://vaas.knotcity.io'}${path}`, data);
     }
 
     private async makeRequest(method: axios.Method, url: string, data?: any)
