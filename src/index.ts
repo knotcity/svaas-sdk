@@ -197,7 +197,7 @@ export type RequestResults<T = undefined> = {
     data: T
 }
 
-interface KnotSASOptions
+interface KnotSaaSOptions
 {
     stationsEndpoint?: string;
     vehiclesEndpoint?: string;
@@ -213,12 +213,12 @@ interface SignatureRequest
     path: string
 }
 
-export class KnotSAS
+export class KnotSaaS
 {
-    #options: KnotSASOptions;
+    #options: KnotSaaSOptions;
     #ax: axios.AxiosInstance;
 
-    constructor(options: KnotSASOptions)
+    constructor(options: KnotSaaSOptions)
     {
         if (typeof (options) !== 'object')
         {
@@ -527,5 +527,5 @@ export class KnotSAS
 
 function throwError(text: string)
 {
-    throw new Error(`[Knot SAS SDK] ${text}`);
+    throw new Error(`[Knot SaaS SDK] ${text}`);
 }
