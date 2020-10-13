@@ -5,6 +5,8 @@ import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthoriz
 //#region Station events
 export enum EventStationType
 {
+    CONNECTED = 'connected',
+    DISCONNECTED = 'disconnected',
     UNLOCKED = 'unlocked',
     LOCKED = 'locked',
     BOOT = 'boot',
@@ -35,6 +37,18 @@ type EventStationBase = {
     event: EventStationType,
     station: number
 }
+
+export type ConnectedStationEvent = EventStationBase & {
+    event: EventStationType.CONNECTED,
+};
+
+export type DisconnectedStationEvent = EventStationBase & {
+    event: EventStationType.DISCONNECTED,
+    data: {
+        reason: string,
+        error: boolean
+    }
+};
 
 export type UnlockedStationEvent = EventStationBase & {
     event: EventStationType.UNLOCKED,
@@ -106,11 +120,13 @@ export type BadgeRFIDStationEvent = EventStationBase & {
     }
 };
 
-export type KnotStationEvent = UnlockedStationEvent | LockedStationEvent | BootStationEvent | StateStationEvent | ShakeStationEvent | HighTempStationEvent | CriticalEnergyStationEvent | UnexpectedUnlockStationEvent | SpotDefectStationEvent | BadgeRFIDStationEvent;
+export type KnotStationEvent = ConnectedStationEvent | DisconnectedStationEvent | UnlockedStationEvent | LockedStationEvent | BootStationEvent | StateStationEvent | ShakeStationEvent | HighTempStationEvent | CriticalEnergyStationEvent | UnexpectedUnlockStationEvent | SpotDefectStationEvent | BadgeRFIDStationEvent;
 
 export type StationInformation = RequestResults<{ spots_count: number, model_name: string, activation_date: Date | null, station_id: number, model_type: string, manufacturer: string }>;
 export type EnabledStations = RequestResults<{ station_id: number, spots_count: number, activation_date: Date }[]>;
 export type DisabledStations = RequestResults<{ station_id: number, spots_count: number }[]>;
+
+type StationConfigType = 'volume';
 //#endregion Station events
 
 //#region Vehicle events
@@ -303,6 +319,14 @@ export class KnotSaaS
     pingStation(stationId: number): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'ping', stationId);
+    }
+
+    configureStation(stationId: number, type: StationConfigType, value: number): Promise<RequestResults>
+    {
+        return this.makeStationRequest('POST', 'v1', 'config', stationId, {
+            config: type,
+            value
+        });
     }
 
     unlockSpot(stationId: number, spotId: number, unlockId: number): Promise<RequestResults>
