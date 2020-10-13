@@ -126,7 +126,7 @@ export type StationInformation = RequestResults<{ spots_count: number, model_nam
 export type EnabledStations = RequestResults<{ station_id: number, spots_count: number, activation_date: Date }[]>;
 export type DisabledStations = RequestResults<{ station_id: number, spots_count: number }[]>;
 
-type StationConfigType = 'volume';
+export type StationConfigType = 'volume';
 //#endregion Station events
 
 //#region Vehicle events
