@@ -20,7 +20,7 @@
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
     "typescript": "^4.0.3",
-    "eslint": "^7.11.0"
+    "eslint": "^7.12.1"
   },
   "dependencies": {
     "@knotcity/http-request-signer": "^0.1.1",
