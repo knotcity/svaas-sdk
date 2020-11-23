@@ -440,6 +440,11 @@ export class KnotSaaS
         return this.makeVehicleRequest('POST', 'v1', 'enable', vehicleId);
     }
 
+    shutdownVehicle(vehicleId: number)
+    {
+        return this.makeVehicleRequest('POST', 'v1', 'shutdown', vehicleId);
+    }
+
     async getVehicleInformation(vehicleId: number): Promise<VehicleInformation>
     {
         const requestResults = await this.makeVehicleRequest('GET', 'v1', '', vehicleId);
