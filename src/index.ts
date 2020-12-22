@@ -329,7 +329,7 @@ export class KnotSaaS
         });
     }
 
-    unlockSpot(stationId: number, spotId: number, unlockId: number): Promise<RequestResults>
+    unlockSpot(stationId: number, spotId: number, unlockId: number, ignoreVehicleResponse?: boolean): Promise<RequestResults>
     {
         if (!Number.isInteger(spotId) || spotId < 1)
         {
@@ -339,9 +339,14 @@ export class KnotSaaS
         {
             throwError('Unlock ID should be an integer greater or equal to 1');
         }
+        if (ignoreVehicleResponse !== undefined && typeof ignoreVehicleResponse !== 'boolean')
+        {
+            throwError('Ignore vehicle response should be a boolean or undefined');
+        }
         return this.makeStationRequest('POST', 'v1', 'unlock', stationId, {
             spot: spotId,
-            unlock: unlockId
+            unlock: unlockId,
+            ignore_vehicle_response: ignoreVehicleResponse
         });
     }
 
