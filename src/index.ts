@@ -378,7 +378,7 @@ export class KnotSaaS
     async getStationInformation(stationId: number): Promise<StationInformation>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', '', stationId);
-        if (requestResults.data.activation_date)
+        if (requestResults.data && requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
         }
