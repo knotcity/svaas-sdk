@@ -1,4 +1,4 @@
-import type { RequestResults } from './index';
+import type { RequestResults } from './lib';
 
 /**
  * Enum for the event station type.
@@ -38,7 +38,7 @@ export enum ConfirmLockAnswer
  * @readonly
  * @enum {number}
  */
-export const enum BadgeReaderStatus
+export enum BadgeReaderStatus
 {
     LINK = 0,
     SUCCEEDED = 1,
@@ -54,14 +54,14 @@ type EventStationBase = {
 }
 
 /**
- * Type for the connected station events.
+ * Type for the station connected event.
  */
 export type ConnectedStationEvent = EventStationBase & {
     event: EventStationType.CONNECTED,
 };
 
 /**
- * Type for the disconnected station events.
+ * Type for the station disconnected event.
  */
 export type DisconnectedStationEvent = EventStationBase & {
     event: EventStationType.DISCONNECTED,
@@ -72,7 +72,7 @@ export type DisconnectedStationEvent = EventStationBase & {
 };
 
 /**
- * Type for the unlocked station events.
+ * Type for the station unlocked event.
  */
 export type UnlockedStationEvent = EventStationBase & {
     event: EventStationType.UNLOCKED,
@@ -83,7 +83,7 @@ export type UnlockedStationEvent = EventStationBase & {
 };
 
 /**
- * Type for the locked station events.
+ * Type for the station locked event.
  */
 export type LockedStationEvent = {
     event: EventStationType.LOCKED,
@@ -96,14 +96,14 @@ export type LockedStationEvent = {
 };
 
 /**
- * Type for the boot station events.
+ * Type for the station boot event.
  */
 export type BootStationEvent = EventStationBase & {
     event: EventStationType.BOOT,
 };
 
 /**
- * Type for the state station events.
+ * Type for the station state event.
  */
 export type StateStationEvent = EventStationBase & {
     event: EventStationType.STATE,
@@ -114,14 +114,14 @@ export type StateStationEvent = EventStationBase & {
 };
 
 /**
- * Type for the shake station events.
+ * Type for the station shake event.
  */
 export type ShakeStationEvent = EventStationBase & {
     event: EventStationType.SHAKE,
 };
 
 /**
- * Type for the high temperature station events.
+ * Type for the high station temperature event.
  */
 export type HighTempStationEvent = EventStationBase & {
     event: EventStationType.HIGH_TEMP,
@@ -132,14 +132,14 @@ export type HighTempStationEvent = EventStationBase & {
 };
 
 /**
- * Type for the critical energy station events.
+ * Type for the station critical energy event.
  */
 export type CriticalEnergyStationEvent = EventStationBase & {
     event: EventStationType.ENERGY_CRITICAL,
 };
 
 /**
- * Type for the unexpected unlock station events.
+ * Type for the station unexpected unlock event.
  */
 export type UnexpectedUnlockStationEvent = EventStationBase & {
     event: EventStationType.UNEXPECTED_UNLOCK,
@@ -149,7 +149,7 @@ export type UnexpectedUnlockStationEvent = EventStationBase & {
 };
 
 /**
- * Type for the spot defect station events.
+ * Type for the station spot defect event.
  */
 export type SpotDefectStationEvent = EventStationBase & {
     event: EventStationType.SPOT_DEFECT,
@@ -162,7 +162,7 @@ export type SpotDefectStationEvent = EventStationBase & {
 };
 
 /**
- * Type for the badge reading station events.
+ * Type for the station badge reading event.
  */
 export type BadgeRFIDStationEvent = EventStationBase & {
     event: EventStationType.BADGE_RFID,
@@ -190,6 +190,6 @@ export type EnabledStations = RequestResults<{ station_id: number, spots_count: 
 export type DisabledStations = RequestResults<{ station_id: number, spots_count: number }[]>;
 
 /**
- * Station configuration type available.
+ * Station configuration types.
  */
 export type StationConfigType = 'volume';

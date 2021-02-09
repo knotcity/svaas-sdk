@@ -1,4 +1,4 @@
-enum Code {
+export enum Code {
     SUCCESS = 0, // HTTP 200
     INVALID_STATION = 9, // HTTP 400
     INVALID_VEHICLE = 10, // HTTP 400

@@ -1,7 +1,7 @@
-import type { RequestResults } from './index';
+import type { RequestResults } from './lib';
 
 /**
- * Enum for the event vehicle type.
+ * Enum for the vehicle event type.
  * @readonly
  * @enum {string}
  */
@@ -37,7 +37,7 @@ type EventVehicleBase = {
 }
 
 /**
- * Type for the unlocked vehicle events.
+ * Type for the vehicle unlocked event.
  */
 export type UnlockedVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.UNLOCKED,
@@ -48,7 +48,7 @@ export type UnlockedVehicleEvent = EventVehicleBase & {
 };
 
 /**
- * Type for the locked vehicle events.
+ * Type for the vehicle locked event.
  */
 export type LockedVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.LOCKED,
@@ -59,7 +59,7 @@ export type LockedVehicleEvent = EventVehicleBase & {
 };
 
 /**
- * Type for the location vehicle events.
+ * Type for the vehicle location event.
  */
 export type LocationVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.LOCATION,
@@ -73,7 +73,7 @@ export type LocationVehicleEvent = EventVehicleBase & {
 };
 
 /**
- * Type for the status vehicle events.
+ * Type for the vehicle status event.
  */
 export type StatusVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.STATUS,
@@ -86,7 +86,7 @@ export type StatusVehicleEvent = EventVehicleBase & {
 };
 
 /**
- * Type for the lock failed vehicle events.
+ * Type for the vehicle lock failed event.
  */
 export type LockFailedVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.LOCK_FAILED,
