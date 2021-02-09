@@ -20,7 +20,11 @@ export type RequestResults<T = undefined> = {
     data: T
 }
 
-interface KnotSaaSOptions
+/**
+ * Interface for SVaaS option used in the KnotSVaaS class constructor.
+ * @interface
+ */
+interface KnotSVaaSOptions
 {
     stationsEndpoint?: string;
     vehiclesEndpoint?: string;
@@ -29,19 +33,30 @@ interface KnotSaaSOptions
     keyId: string;
 }
 
-interface SignatureRequest
+/**
+ * Interface for the event for check the signature.
+ * @interface
+ */
+interface SignatureEvent
 {
     headers: { [key: string]: any },
     httpMethod: string,
     path: string
 }
 
-export class KnotSaaS
+/**
+ * Knot Stations and Vehicles as a Service utility class.
+ */
+export class KnotSVaaS
 {
-    #options: KnotSaaSOptions;
+    #options: KnotSVaaSOptions;
     #ax: axios.AxiosInstance;
 
-    constructor(options: KnotSaaSOptions)
+    /**
+     * Class constructor.
+     * @param {KnotSVaaSOptions} options - Information for the SVaaS connection (keys and endpoints).
+     */
+    constructor(options: KnotSVaaSOptions)
     {
         if (typeof (options) !== 'object')
         {
@@ -118,16 +133,30 @@ export class KnotSaaS
     }
 
     //#region Station commands
+    /**
+     * Send request to reboot the station.
+     * @param {number} stationId - The identifier of the station.
+     */
     rebootStation(stationId: number): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'reboot', stationId);
     }
 
+    /**
+     * Send request to ping the station.
+     * @param {number} stationId - The identifier of the station.
+     */
     pingStation(stationId: number): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'ping', stationId);
     }
 
+    /**
+     * Send request to change station configuration.
+     * @param {number} stationId - The identifier of the station.
+     * @param {StationConfigType} type - The name of the configuration to edit.
+     * @param {number} value - The value of the configuration.
+     */
     configureStation(stationId: number, type: StationConfigType, value: number): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'config', stationId, {
@@ -136,6 +165,13 @@ export class KnotSaaS
         });
     }
 
+    /**
+     * Send request to unlock a station spot.
+     * @param {number} stationId - The identifier of the station.
+     * @param {number} spotId - The identifier of the spot to unlock.
+     * @param {number} unlockId - An identifier to track this unlock request. This will be sent back in the unlocked event.
+     * @param {boolean} ignoreVehicleResponse - Ignore the vehicle unlock response if there is vehicle with IoT on the spot. Useful for maintenance as it allow to unlock a spot with a broken or unavailable vehicle.
+     */
     unlockSpot(stationId: number, spotId: number, unlockId: number, ignoreVehicleResponse?: boolean): Promise<RequestResults>
     {
         if (!Number.isInteger(spotId) || spotId < 1)
@@ -157,11 +193,21 @@ export class KnotSaaS
         });
     }
 
+    /**
+     * Send request to scan of all spots of a station. For each spot with a vehicle in, the station will re-send the locked event.
+     * @param {number} stationId - The identifier of the station.
+     */
     scanAllStationSpot(stationId: number): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'refresh', stationId);
     }
 
+    /**
+     * Send a response to confirm the locking of the station.
+     * @param {number} stationId - The identifier of the station.
+     * @param {number} spotId - The identifier of the spot to which to send the lock response.
+     * @param {ConfirmLockAnswer} accepted - Response status of the vehicle's lock on the station.
+     */
     confirmLockSpot(stationId: number, spotId: number, accepted: ConfirmLockAnswer): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'lock-response', stationId, {
@@ -170,6 +216,11 @@ export class KnotSaaS
         });
     }
 
+    /**
+     * Send a feedback to the user for the card reader.
+     * @param {number} stationId - The identifier of the station.
+     * @param {BadgeReaderStatus} status - Status of the feedback send to the user.
+     */
     badgeReaderFeedback(stationId: number, status: BadgeReaderStatus): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'badge', stationId, {
@@ -177,11 +228,19 @@ export class KnotSaaS
         });
     }
 
+    /**
+     * Send request for enable the station.
+     * @param {number} stationId - The identifier of the station.
+     */
     enableStation(stationId: number): Promise<RequestResults>
     {
         return this.makeStationRequest('POST', 'v1', 'enable', stationId);
     }
 
+    /**
+     * Get the station's information and current state.
+     * @param {number} stationId - The identifier of the station.
+     */
     async getStationInformation(stationId: number): Promise<StationInformation>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', '', stationId);
@@ -192,6 +251,9 @@ export class KnotSaaS
         return requestResults;
     }
 
+    /**
+     * Get the list of enabled stations.
+     */
     async getEnabledStations(): Promise<EnabledStations>
     {
         const requestResults = await this.makeStationRequest('GET', 'v1', 'enabled');
@@ -202,6 +264,9 @@ export class KnotSaaS
         return requestResults;
     }
 
+    /**
+     * Get the list of disabled stations.
+     */
     async getDisabledStations(): Promise<DisabledStations>
     {
         return await this.makeStationRequest('GET', 'v1', 'disabled');
@@ -209,6 +274,11 @@ export class KnotSaaS
     //#endregion Station commands
 
     //#region Vehicle commands
+    /**
+     * Send request to unlock a vehicle.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @param {number} unlockId - An identifier to track this unlock request. This will be sent back in the unlocked event.
+     */
     unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
     {
         if (!Number.isInteger(unlockId) || unlockId < 1)
@@ -220,6 +290,11 @@ export class KnotSaaS
         });
     }
 
+    /**
+     * Send request to lock a vehicle.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @param {number} lockId - An identifier to track this lock request. This will be sent back in the locked event.
+     */
     lockVehicle(vehicleId: number, lockId: number): Promise<RequestResults>
     {
         if (!Number.isInteger(lockId) || lockId < 1)
@@ -231,6 +306,11 @@ export class KnotSaaS
         });
     }
 
+    /**
+     * Send request to the vehicle for play a sound.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @param {('geo-fence'|'toot'|'low_battery')} soundType - The name of the sound to play.
+     */
     emitVehicleSound(vehicleId: number, soundType: 'geo-fence' | 'toot' | 'low_battery'): Promise<RequestResults>
     {
         if (soundType != 'geo-fence' && soundType !=  'toot' && soundType !=  'low_battery')
@@ -242,21 +322,37 @@ export class KnotSaaS
         });
     }
 
+    /**
+     * Send request to open the battery cover of the vehicle.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     */
     openVehicleBatteryCover(vehicleId: number)
     {
         return this.makeVehicleRequest('POST', 'v1', 'battery-cover', vehicleId);
     }
 
+    /**
+     * Send request for enable the vehicle.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     */
     enableVehicle(vehicleId: number): Promise<RequestResults>
     {
         return this.makeVehicleRequest('POST', 'v1', 'enable', vehicleId);
     }
 
+    /**
+     * Send request for shutdown the vehicle (ex: for the transport).
+     * @param {number} vehicleId - The identifier of the vehicle.
+     */
     shutdownVehicle(vehicleId: number)
     {
         return this.makeVehicleRequest('POST', 'v1', 'shutdown', vehicleId);
     }
 
+    /**
+     * Get the vehicle's information.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     */
     async getVehicleInformation(vehicleId: number): Promise<VehicleInformation>
     {
         const requestResults = await this.makeVehicleRequest('GET', 'v1', '', vehicleId);
@@ -267,6 +363,9 @@ export class KnotSaaS
         return requestResults;
     }
 
+    /**
+     * Get the list of enabled vehicles.
+     */
     async getEnabledVehicles(): Promise<EnabledVehicles>
     {
         const requestResults = await this.makeVehicleRequest('GET', 'v1', 'enabled');
@@ -277,6 +376,9 @@ export class KnotSaaS
         return requestResults;
     }
 
+    /**
+     * Get the list of disabled vehicles.
+     */
     async getDisabledVehicles(): Promise<DisabledVehicles>
     {
         return await this.makeVehicleRequest('GET', 'v1', 'disabled');
@@ -284,11 +386,15 @@ export class KnotSaaS
     //#endregion Vehicle commands
 
     // Signature validation
-    checkKnotRequestSignature(request: SignatureRequest)
+    /**
+     * Check the signature event signature.
+     * @param {SignatureEvent} event - Event information.
+     */
+    checkKnotEventSignature(event: SignatureEvent)
     {
         try
         {
-            const headers = Object.entries(request.headers);
+            const headers = Object.entries(event.headers);
             const authHeader = headers.find(e => e[0].toLocaleLowerCase() == 'authorization');
             if (!authHeader || typeof authHeader[1] !== 'string')
             {
@@ -306,9 +412,9 @@ export class KnotSaaS
                 Object.assign(authComponents, { hash: 'sha256', algorithm: 'ecdsa' });
 
             return verifyAuthorization(compts, {
-                headers: request.headers,
-                method: request.httpMethod,
-                path: request.path
+                headers: event.headers,
+                method: event.httpMethod,
+                path: event.path
             }, this.#options.knotPublicKey);
         }
         catch (e)
@@ -317,6 +423,15 @@ export class KnotSaaS
         }
     }
 
+    /**
+     * Make a station request for the SVaaS API.
+     * @param {axios.Method} method - HTTP method used for make the request.
+     * @param {string} version - Version of the service to call.
+     * @param {string} action - Action to call.
+     * @param {number} [id] - The identifier of the station if necessary.
+     * @param {*} [data] - Other data.
+     * @private
+     */
     private makeStationRequest(method: axios.Method, version: string, action: string, id?: number, data?: any)
     {
         let path: string;
@@ -336,6 +451,15 @@ export class KnotSaaS
         return this.makeRequest(method, `${this.#options.stationsEndpoint || 'https://staas.knotcity.io'}${path}`, data);
     }
 
+    /**
+     * Make a vehicle request for the SVaaS API.
+     * @param {axios.Method} method - HTTP method used for make the request.
+     * @param {string} version - Version of the service to call.
+     * @param {string} action - Action to call.
+     * @param {number} [id] - The identifier of the vehicle if necessary.
+     * @param {*} [data] - Other data.
+     * @private
+     */
     private makeVehicleRequest(method: axios.Method, version: string, action: string, id?: number, data?: any)
     {
         let path: string;
@@ -354,6 +478,13 @@ export class KnotSaaS
         return this.makeRequest(method, `${this.#options.vehiclesEndpoint || 'https://vaas.knotcity.io'}${path}`, data);
     }
 
+    /**
+     * Make and send the final request.
+     * @param {axios.Method} method - HTTP method used for make the request.
+     * @param {string} url - SVaaS url to called.
+     * @param {*} [data] - Other data.
+     * @private
+     */
     private async makeRequest(method: axios.Method, url: string, data?: any)
     {
         const results = await this.#ax({
@@ -366,7 +497,11 @@ export class KnotSaaS
     }
 }
 
+/**
+ * Throw an SVaaS error.
+ * @param {string} text - Error information.
+ */
 function throwError(text: string)
 {
-    throw new Error(`[Knot SaaS SDK] ${text}`);
+    throw new Error(`[Knot SVaaS SDK] ${text}`);
 }
