@@ -101,14 +101,42 @@ export type LockFailedVehicleEvent = EventVehicleBase & {
 export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | LocationVehicleEvent | StatusVehicleEvent | LockFailedVehicleEvent;
 
 /**
+ * Disabled vehicles interface
+ * @interface
+ */
+interface DisabledVehiclesInterface
+{
+    vehicle_id: number
+}
+/**
+ * Vehicle information interface
+ * @interface
+ */
+interface VehicleInformationInterface extends DisabledVehiclesInterface
+{
+    model_name: string,
+    activation_date: Date | null,
+    model_type: string,
+    manufacturer: string
+}
+/**
+ * Enabled vehicles interface
+ * @interface
+ */
+interface EnabledVehiclesInterface extends DisabledVehiclesInterface
+{
+    activation_date: Date
+}
+
+/**
  * Type describing the data returned when requesting information about a vehicle.
  */
-export type VehicleInformation = RequestResults<{ model_name: string, activation_date: Date | null, vehicle_id: number, model_type: string, manufacturer: string }>;
+export type VehicleInformation = RequestResults<VehicleInformationInterface>;
 /**
  * Type describing the data returned when requesting list of the enabled vehicles.
  */
-export type EnabledVehicles = RequestResults<{ vehicle_id: number, activation_date: Date }[]>;
+export type EnabledVehicles = RequestResults<EnabledVehiclesInterface[]>;
 /**
  * Type describing the data returned when requesting list of the disabled vehicles.
  */
-export type DisabledVehicles = RequestResults<{ vehicle_id: number }[]>;
+export type DisabledVehicles = RequestResults<DisabledVehiclesInterface[]>;

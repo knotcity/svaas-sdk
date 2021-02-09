@@ -176,18 +176,55 @@ export type BadgeRFIDStationEvent = EventStationBase & {
  */
 export type KnotStationEvent = ConnectedStationEvent | DisconnectedStationEvent | UnlockedStationEvent | LockedStationEvent | BootStationEvent | StateStationEvent | ShakeStationEvent | HighTempStationEvent | CriticalEnergyStationEvent | UnexpectedUnlockStationEvent | SpotDefectStationEvent | BadgeRFIDStationEvent;
 
+
+/**
+ * Disabled stations interface
+ * @interface
+ */
+interface DisabledStationsInterface
+{
+    station_id: number,
+    spots_count: number
+}
+/**
+ * Station information interface
+ * @interface
+ */
+interface StationInformationInterface extends DisabledStationsInterface
+{
+    model_name: string,
+    manufacturer: string,
+    model_type: string,
+    activation_date: Date | null,
+    online: boolean,
+    spots: {
+        spot_id: number,
+        vehicle: number | null,
+        lock: 0 | 1
+    }[]
+}
+/**
+ * Enabled stations interface
+ * @interface
+ */
+interface EnabledStationsInterface extends DisabledStationsInterface
+{
+    activation_date: Date,
+    online: boolean
+}
+
 /**
  * Type describing the data returned when requesting information about a station.
  */
-export type StationInformation = RequestResults<{ station_id: number, model_name: string, manufacturer: string, model_type: string, spots_count: number, activation_date: Date | null, online: boolean, spots: { spot_id: number, vehicle: number | null, lock: 0 | 1 }[] }>;
+export type StationInformation = RequestResults<StationInformationInterface>;
 /**
  * Type describing the data returned when requesting list of the enabled stations.
  */
-export type EnabledStations = RequestResults<{ station_id: number, spots_count: number, activation_date: Date, online: boolean }[]>;
+export type EnabledStations = RequestResults<EnabledStationsInterface[]>;
 /**
  * Type describing the data returned when requesting list of the disabled stations.
  */
-export type DisabledStations = RequestResults<{ station_id: number, spots_count: number }[]>;
+export type DisabledStations = RequestResults<DisabledStationsInterface[]>;
 
 /**
  * Station configuration types.

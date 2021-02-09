@@ -11,6 +11,7 @@ import type {
     StationConfigType,
     StationInformation
 } from './station';
+import { SVaaSError } from './SVaaSError';
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
 
@@ -35,11 +36,11 @@ interface KnotSVaaSOptions
      */
     vehiclesEndpoint?: string;
     /**
-     * Private key used for signe your request.
+     * Private key used to sign your request.
      */
     privateKey: string;
     /**
-     * Public key used for check the event signature.
+     * Public key used for check events signature.
      */
     knotPublicKey: string;
     /**
@@ -75,17 +76,17 @@ export class KnotSVaaS
     {
         if (typeof (options) !== 'object')
         {
-            throwError('Options should be an object');
+            throw new SVaaSError('Options should be an object');
         }
         if (options.stationsEndpoint !== undefined)
         {
             if (typeof options.stationsEndpoint !== 'string')
             {
-                throwError('The given stations endpoint should be a string');
+                throw new SVaaSError('The given stations endpoint should be a string');
             }
             if (options.stationsEndpoint.length < 3)
             {
-                throwError('The given stations endpoint is too short to be valid');
+                throw new SVaaSError('The given stations endpoint is too short to be valid');
             }
             if (options.stationsEndpoint.endsWith('/'))
             {
@@ -96,11 +97,11 @@ export class KnotSVaaS
         {
             if (typeof options.vehiclesEndpoint !== 'string')
             {
-                throwError('The given vehicles endpoint should be a string');
+                throw new SVaaSError('The given vehicles endpoint should be a string');
             }
             if (options.vehiclesEndpoint.length < 3)
             {
-                throwError('The given vehicles endpoint is too short to be valid');
+                throw new SVaaSError('The given vehicles endpoint is too short to be valid');
             }
             if (options.vehiclesEndpoint.endsWith('/'))
             {
@@ -109,11 +110,11 @@ export class KnotSVaaS
         }
         if (typeof options.keyId !== 'string')
         {
-            throwError('The given keyId should be a string');
+            throw new SVaaSError('The given keyId should be a string');
         }
         if (typeof options.privateKey !== 'string')
         {
-            throwError('The given privateKey should be a string');
+            throw new SVaaSError('The given privateKey should be a string');
         }
 
         this.#options = options;
@@ -141,7 +142,7 @@ export class KnotSVaaS
             }
             catch (err)
             {
-                throwError(`Generating the request signature failed: ${err.toString()}`);
+                throw new SVaaSError(`Generating the request signature failed: ${err.toString()}`);
             }
             return c;
         });
@@ -195,15 +196,15 @@ export class KnotSVaaS
     {
         if (!Number.isInteger(spotId) || spotId < 1)
         {
-            throwError('Spot ID should be an integer greater or equal to 1');
+            throw new SVaaSError('Spot ID should be an integer greater or equal to 1');
         }
         if (!Number.isInteger(unlockId) || unlockId < 1)
         {
-            throwError('Unlock ID should be an integer greater or equal to 1');
+            throw new SVaaSError('Unlock ID should be an integer greater or equal to 1');
         }
         if (ignoreVehicleResponse !== undefined && typeof ignoreVehicleResponse !== 'boolean')
         {
-            throwError('Ignore vehicle response should be a boolean or undefined');
+            throw new SVaaSError('Ignore vehicle response should be a boolean or undefined');
         }
         return this.makeStationRequest('POST', 'v1', 'unlock', stationId, {
             spot: spotId,
@@ -310,7 +311,7 @@ export class KnotSVaaS
     {
         if (!Number.isInteger(unlockId) || unlockId < 1)
         {
-            throwError('Unlock ID should be an integer greater or equal to 1');
+            throw new SVaaSError('Unlock ID should be an integer greater or equal to 1');
         }
         return this.makeVehicleRequest('POST', 'v1', 'unlock', vehicleId, {
             unlock: unlockId
@@ -327,7 +328,7 @@ export class KnotSVaaS
     {
         if (!Number.isInteger(lockId) || lockId < 1)
         {
-            throwError('Lock ID should be an integer greater or equal to 1');
+            throw new SVaaSError('Lock ID should be an integer greater or equal to 1');
         }
         return this.makeVehicleRequest('POST', 'v1', 'lock', vehicleId, {
             lock: lockId
@@ -344,7 +345,7 @@ export class KnotSVaaS
     {
         if (soundType != 'geo-fence' && soundType !=  'toot' && soundType !=  'low_battery')
         {
-            throwError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
+            throw new SVaaSError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
         }
         return this.makeVehicleRequest('POST', 'v1', 'sound', vehicleId, {
             sound_type: soundType
@@ -475,7 +476,7 @@ export class KnotSVaaS
         {
             if (!Number.isInteger(id) || id < 1)
             {
-                throwError('Station ID should be an integer greater or equal to 1');
+                throw new SVaaSError('Station ID should be an integer greater or equal to 1');
             }
             path = `/${version}/${id}/${action}`;
         }
@@ -503,7 +504,7 @@ export class KnotSVaaS
         {
             if (!Number.isInteger(id) || id < 1)
             {
-                throwError('Vehicle ID should be an integer greater or equal to 1');
+                throw new SVaaSError('Vehicle ID should be an integer greater or equal to 1');
             }
             path = `/${version}/${id}/${action}`;
         }
@@ -531,13 +532,4 @@ export class KnotSVaaS
         });
         return results.data as RequestResults<any>;
     }
-}
-
-/**
- * Throw a SVaaS error.
- * @param {string} text - Error information.
- */
-function throwError(text: string)
-{
-    throw new Error(`[Knot SVaaS SDK] ${text}`);
 }
