@@ -8,6 +8,8 @@ stages:
 
 lint:
   stage: test
+  except:
+    - schedules
   before_script:
     - npm ci
   script:
@@ -15,6 +17,8 @@ lint:
 
 build:
   stage: build
+  except:
+    - schedules
   before_script:
     - npm install
   script:
