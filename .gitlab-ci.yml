@@ -1,19 +1,14 @@
 image: "node:erbium-alpine"
 
 stages:
-  - test # Run unit tests
+  - test
   - build
   - deploy
-
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-  - node_modules/
+  - sync
 
 lint:
   stage: test
   before_script:
-    - echo "//npm.knotcity.io/:_authToken=$NPM_TOKEN" >> .npmrc
     - npm ci
   script:
     - npm run lint
@@ -21,7 +16,6 @@ lint:
 build:
   stage: build
   before_script:
-    - echo "//npm.knotcity.io/:_authToken=$NPM_TOKEN" >> .npmrc
     - npm install
   script:
     - npm run build
@@ -29,11 +23,74 @@ build:
     paths:
       - dist/
 
-deploy:
+deploy-internal:
   stage: deploy
+  except:
+    - schedules
   only:
     - pre_prod
   before_script:
-    - echo "//npm.knotcity.io/:_authToken=$NPM_TOKEN" >> .npmrc
+    - echo "@knotcity:registry=https://$KNOT_REPO" > .npmrc
+    - echo "//$KNOT_REPO/:_authToken=$KNOT_NPM_TOKEN" >> .npmrc
   script:
     - npm publish
+
+deploy:
+  stage: deploy
+  except:
+    - schedules
+  only:
+    - master
+  before_script:
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+  script:
+    - npm publish --access public
+
+.setup-ssh-keys:
+  variables:
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0
+  before_script:
+    ## Create the SSH directory and give it the right permissions
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    ## Install ssh-agent if not already installed, it is required by Docker.
+    - 'command -v ssh-agent >/dev/null || ( apk update && apk add --no-cache openssh-client ca-certificates bash git )'
+    ## Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+    ## Add the SSH key to the agent store
+    ## We're using tr to fix line endings which makes ed25519 keys work without extra base64 encoding.
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    ## Set known host
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    ## Configure git
+    - git config --global user.email "$KNOT_EMAIL"
+
+push-on-github:
+  extends: .setup-ssh-keys
+  stage: sync
+  except:
+    - schedules
+  only:
+    - master
+  script:
+    - git checkout -B master "$CI_COMMIT_SHA"
+    - git config --global user.name "knotcitybot"
+    - if ! git config remote.github.url > /dev/null; then git remote add github "$GITHUB_REMOTE"; fi
+    - git fetch --all
+    - git push github master
+
+pull-from-github:
+  extends: .setup-ssh-keys
+  stage: sync
+  only:
+    - schedules
+  script:
+    - git config --global user.name "knotcitybot"
+    - git remote set-url origin $KNOT_SSH_REPO_URL
+    - if ! git config remote.github.url > /dev/null; then git remote add github "$GITHUB_REMOTE"; fi
+    - git pull github community
+    - git checkout -B community github/community
+    - git config --global user.name "Knobot"
+    - git push origin community
