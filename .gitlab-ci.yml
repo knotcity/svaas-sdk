@@ -27,28 +27,47 @@ build:
     paths:
       - dist/
 
-deploy-internal:
+.deploy-base:
   stage: deploy
   except:
     - schedules
+  before_script:
+    - apk update && apk add --no-cache jq
+
+deploy-internal:
+  extends: .deploy-base
   only:
     - pre_prod
-  before_script:
+  script:
     - echo "@knotcity:registry=https://$KNOT_REPO" > .npmrc
     - echo "//$KNOT_REPO/:_authToken=$KNOT_NPM_TOKEN" >> .npmrc
-  script:
-    - npm publish
+    - |
+      PKG_NAME=`cat package.json | jq -r '.name'`
+      LOCAL_VERSION=`cat package.json | jq -r '.version'`
+      REMOTE_VERSION=`npm view $PKG_NAME version --registry https://$KNOT_REPO`
+      if [ $LOCAL_VERSION != $REMOTE_VERSION ]; then
+        echo "Publishing version $LOCAL_VERSION over $REMOTE_VERSION"
+        npm publish
+      else
+        echo "Version already published, skipping"
+      fi
 
 deploy:
-  stage: deploy
-  except:
-    - schedules
+  extends: .deploy-base
   only:
     - master
-  before_script:
-    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
   script:
-    - npm publish --access public
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+    - |
+      PKG_NAME=`cat package.json | jq -r '.name'`
+      LOCAL_VERSION=`cat package.json | jq -r '.version'`
+      REMOTE_VERSION=`npm view $PKG_NAME version --registry https://registry.npmjs.org`
+      if [ "$LOCAL_VERSION" != "$REMOTE_VERSION" ]; then
+        echo "Publishing version $LOCAL_VERSION over $REMOTE_VERSION"
+        npm publish --access public
+      else
+        echo "Version already published, skipping"
+      fi
 
 .setup-ssh-keys:
   variables:
