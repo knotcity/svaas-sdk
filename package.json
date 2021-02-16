@@ -1,6 +1,6 @@
 {
   "name": "@knotcity/svaas-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Knot Stations and Vehicles As A Service SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

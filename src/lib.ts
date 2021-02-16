@@ -1,28 +1,38 @@
 import axios = require('axios');
 import reqSigner = require('@knotcity/http-request-signer');
-import { AuthorizationHeaderComponents, parseAuthorizationHeader, verifyAuthorization } from '@knotcity/http-request-signer';
+import {
+    AuthorizationHeaderComponents,
+    parseAuthorizationHeader,
+    verifyAuthorization
+} from '@knotcity/http-request-signer';
 
-import type { BadgeReaderStatus, ConfirmLockAnswer } from './station';
-import type { DisabledVehicles, EnabledVehicles, KnotVehicleEvent, VehicleInformation } from './vehicle';
+import { KnotCode } from './KnotCode';
+import { SVaaSError } from './SVaaSError';
 import type {
+    BadgeReaderStatus,
+    ConfirmLockAnswer,
     DisabledStations,
     EnabledStations,
     KnotStationEvent,
     StationConfigType,
     StationInformation
 } from './station';
-import { SVaaSError } from './SVaaSError';
+import type { DisabledVehicles, EnabledVehicles, KnotVehicleEvent, VehicleInformation } from './vehicle';
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
 
 export type RequestResults = {
-    code: number;
+    code: KnotCode;
     message: string;
-}
+};
 
-export type RequestResultsWithData<T = any> = RequestResults & {
+export type RequestResultsFailure = RequestResults & { code: Exclude<KnotCode, KnotCode.SUCCESS> };
+export type RequestResultsSuccessWithData<T = any> = RequestResults & {
+    code: KnotCode.SUCCESS
     data: T
-}
+};
+
+export type RequestResultsWithData<T> = RequestResultsFailure | RequestResultsSuccessWithData<T>;
 
 /**
  * Interface for SVaaS option used in the KnotSVaaS class constructor.
@@ -272,7 +282,7 @@ export class KnotSVaaS
     async getStationInformation(stationId: number): Promise<StationInformation>
     {
         const requestResults = await this.makeStationRequest<StationInformation>('GET', 'v1', '', stationId);
-        if (requestResults.data && requestResults.data.activation_date)
+        if (requestResults.code == KnotCode.SUCCESS && requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
         }
@@ -286,10 +296,14 @@ export class KnotSVaaS
     async getEnabledStations(): Promise<EnabledStations>
     {
         const requestResults = await this.makeStationRequest<EnabledStations>('GET', 'v1', 'enabled');
-        requestResults.data.forEach((r: any) => {
-            r.activation_date = new Date(r.data.activation_date);
-            return r;
-        });
+        if (requestResults.code == KnotCode.SUCCESS)
+        {
+            requestResults.data.forEach((r: any) =>
+            {
+                r.activation_date = new Date(r.data.activation_date);
+                return r;
+            });
+        }
         return requestResults;
     }
 
@@ -393,7 +407,7 @@ export class KnotSVaaS
     async getVehicleInformation(vehicleId: number): Promise<VehicleInformation>
     {
         const requestResults = await this.makeVehicleRequest<VehicleInformation>('GET', 'v1', '', vehicleId);
-        if (requestResults.data.activation_date)
+        if ( requestResults.code == KnotCode.SUCCESS && requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
         }
@@ -407,10 +421,14 @@ export class KnotSVaaS
     async getEnabledVehicles(): Promise<EnabledVehicles>
     {
         const requestResults = await this.makeVehicleRequest<EnabledVehicles>('GET', 'v1', 'enabled');
-        requestResults.data.forEach((r: any) => {
-            r.activation_date = new Date(r.data.activation_date);
-            return r;
-        });
+        if (requestResults.code == KnotCode.SUCCESS)
+        {
+            requestResults.data.forEach((r: any) =>
+            {
+                r.activation_date = new Date(r.data.activation_date);
+                return r;
+            });
+        }
         return requestResults;
     }
 

@@ -1,3 +1,9 @@
+# 1.0.2 / 2021-02-16
+
+## :bug: Fixes
+
+* Fix Typescript types of response data
+
 # 1.0.1 / 2021-02-16
 
 ## :bug: Fixes
