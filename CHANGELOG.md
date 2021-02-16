@@ -2,7 +2,7 @@
 
 ## :bug: Fixes
 
-* Fix Typescript types for response data
+* Fix Typescript types of response data
 
 # 1.0.0 / 2021-02-15
 

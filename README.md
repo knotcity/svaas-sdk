@@ -1,6 +1,6 @@
 # Knot Station and Vehicles as a Service (SVaaS) Software Development Kit (SDK)
 
-This sdk allows you to use our service allowing you to control stations and vehicles.
+This SDK allows you to use our service allowing you to control stations and vehicles.
 
 More info on the service on our [Documentation](https://doc.knotcity.io/services/)
 
@@ -29,12 +29,12 @@ import svaas = require('@knotcity/svaas-sdk');
 
 ## Creating a client
 
-Before making request you need to create a new KnotSVaaS object with your keys
+Before making request you need to create a new KnotSVaaS object with your keys.
 
 ```
 // Fetch your info
 const yourKeyId = "...";
-// Watch out for line break (should be `\n` and not `\\n`)
+// Watch out for line breaks (should be `\n` and not `\\n`)
 const yourPrivateKey = "...";
 // The knot's public key is available on our [documentation](https://doc.knotcity.io/services/http-signature/#3-verify-signature)
 // It's used if you want to verify the request we make to your API/Webhooks
@@ -52,13 +52,13 @@ export const SVaaS = new svaas.KnotSVaaS({
 
 ## Calling an action
 
-To call a specific action use the client you just created and call the function you need.
+To call a specific action, use the client you just created and call the function you need.
 
 ```
 try
 {
     const resp = await SVaaS.unlockVehicle(vehicleId, unlockId);
-    resp.code; // Response code, 0 most of the time, which meed success but it can be something else to inform of other actions to take
+    resp.code; // Response code, 0 most of the time, which means success but it can be something else to inform other actions to take
     resp.message; // A descriptive message associated with the code
     resp.data; // Data requested, if any
 }
