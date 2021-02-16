@@ -15,9 +15,12 @@ import { SVaaSError } from './SVaaSError';
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
 
-export type RequestResults<T = undefined> = {
+export type RequestResults = {
     code: number;
     message: string;
+}
+
+export type RequestResultsWithData<T = any> = RequestResults & {
     data: T
 }
 
@@ -156,7 +159,7 @@ export class KnotSVaaS
      */
     rebootStation(stationId: number): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', 'reboot', stationId);
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'reboot', stationId);
     }
 
     /**
@@ -166,7 +169,7 @@ export class KnotSVaaS
      */
     pingStation(stationId: number): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', 'ping', stationId);
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'ping', stationId);
     }
 
     /**
@@ -178,7 +181,7 @@ export class KnotSVaaS
      */
     configureStation(stationId: number, type: StationConfigType, value: number): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', 'config', stationId, {
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'config', stationId, {
             config: type,
             value
         });
@@ -206,7 +209,7 @@ export class KnotSVaaS
         {
             throw new SVaaSError('Ignore vehicle response should be a boolean or undefined');
         }
-        return this.makeStationRequest('POST', 'v1', 'unlock', stationId, {
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'unlock', stationId, {
             spot: spotId,
             unlock: unlockId,
             ignore_vehicle_response: ignoreVehicleResponse
@@ -220,7 +223,7 @@ export class KnotSVaaS
      */
     scanAllStationSpot(stationId: number): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', 'refresh', stationId);
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'refresh', stationId);
     }
 
     /**
@@ -232,7 +235,7 @@ export class KnotSVaaS
      */
     confirmLockSpot(stationId: number, spotId: number, accepted: ConfirmLockAnswer): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', 'lock-response', stationId, {
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'lock-response', stationId, {
             spot: spotId,
             accepted
         });
@@ -246,7 +249,7 @@ export class KnotSVaaS
      */
     badgeReaderFeedback(stationId: number, status: BadgeReaderStatus): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', 'badge', stationId, {
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'badge', stationId, {
             status
         });
     }
@@ -258,7 +261,7 @@ export class KnotSVaaS
      */
     enableStation(stationId: number): Promise<RequestResults>
     {
-        return this.makeStationRequest('POST', 'v1', 'enable', stationId);
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'enable', stationId);
     }
 
     /**
@@ -268,7 +271,7 @@ export class KnotSVaaS
      */
     async getStationInformation(stationId: number): Promise<StationInformation>
     {
-        const requestResults = await this.makeStationRequest('GET', 'v1', '', stationId);
+        const requestResults = await this.makeStationRequest<StationInformation>('GET', 'v1', '', stationId);
         if (requestResults.data && requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
@@ -282,7 +285,7 @@ export class KnotSVaaS
      */
     async getEnabledStations(): Promise<EnabledStations>
     {
-        const requestResults = await this.makeStationRequest('GET', 'v1', 'enabled');
+        const requestResults = await this.makeStationRequest<EnabledStations>('GET', 'v1', 'enabled');
         requestResults.data.forEach((r: any) => {
             r.activation_date = new Date(r.data.activation_date);
             return r;
@@ -294,9 +297,9 @@ export class KnotSVaaS
      * Get the list of disabled stations.
      * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1disabled/get
      */
-    async getDisabledStations(): Promise<DisabledStations>
+    getDisabledStations(): Promise<DisabledStations>
     {
-        return await this.makeStationRequest('GET', 'v1', 'disabled');
+        return this.makeStationRequest<DisabledStations>('GET', 'v1', 'disabled');
     }
     //#endregion Station commands
 
@@ -313,7 +316,7 @@ export class KnotSVaaS
         {
             throw new SVaaSError('Unlock ID should be an integer greater or equal to 1');
         }
-        return this.makeVehicleRequest('POST', 'v1', 'unlock', vehicleId, {
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'unlock', vehicleId, {
             unlock: unlockId
         });
     }
@@ -330,7 +333,7 @@ export class KnotSVaaS
         {
             throw new SVaaSError('Lock ID should be an integer greater or equal to 1');
         }
-        return this.makeVehicleRequest('POST', 'v1', 'lock', vehicleId, {
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'lock', vehicleId, {
             lock: lockId
         });
     }
@@ -347,7 +350,7 @@ export class KnotSVaaS
         {
             throw new SVaaSError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
         }
-        return this.makeVehicleRequest('POST', 'v1', 'sound', vehicleId, {
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'sound', vehicleId, {
             sound_type: soundType
         });
     }
@@ -357,9 +360,9 @@ export class KnotSVaaS
      * @param {number} vehicleId - The identifier of the vehicle.
      * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1battery-cover/post
      */
-    openVehicleBatteryCover(vehicleId: number)
+    openVehicleBatteryCover(vehicleId: number): Promise<RequestResults>
     {
-        return this.makeVehicleRequest('POST', 'v1', 'battery-cover', vehicleId);
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'battery-cover', vehicleId);
     }
 
     /**
@@ -369,7 +372,7 @@ export class KnotSVaaS
      */
     enableVehicle(vehicleId: number): Promise<RequestResults>
     {
-        return this.makeVehicleRequest('POST', 'v1', 'enable', vehicleId);
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'enable', vehicleId);
     }
 
     /**
@@ -377,9 +380,9 @@ export class KnotSVaaS
      * @param {number} vehicleId - The identifier of the vehicle.
      * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1shutdown/post
      */
-    shutdownVehicle(vehicleId: number)
+    shutdownVehicle(vehicleId: number): Promise<RequestResults>
     {
-        return this.makeVehicleRequest('POST', 'v1', 'shutdown', vehicleId);
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'shutdown', vehicleId);
     }
 
     /**
@@ -389,7 +392,7 @@ export class KnotSVaaS
      */
     async getVehicleInformation(vehicleId: number): Promise<VehicleInformation>
     {
-        const requestResults = await this.makeVehicleRequest('GET', 'v1', '', vehicleId);
+        const requestResults = await this.makeVehicleRequest<VehicleInformation>('GET', 'v1', '', vehicleId);
         if (requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
@@ -403,7 +406,7 @@ export class KnotSVaaS
      */
     async getEnabledVehicles(): Promise<EnabledVehicles>
     {
-        const requestResults = await this.makeVehicleRequest('GET', 'v1', 'enabled');
+        const requestResults = await this.makeVehicleRequest<EnabledVehicles>('GET', 'v1', 'enabled');
         requestResults.data.forEach((r: any) => {
             r.activation_date = new Date(r.data.activation_date);
             return r;
@@ -415,9 +418,9 @@ export class KnotSVaaS
      * Get the list of disabled vehicles.
      * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1disabled/get
      */
-    async getDisabledVehicles(): Promise<DisabledVehicles>
+    getDisabledVehicles(): Promise<DisabledVehicles>
     {
-        return await this.makeVehicleRequest('GET', 'v1', 'disabled');
+        return this.makeVehicleRequest<DisabledVehicles>('GET', 'v1', 'disabled');
     }
     //#endregion Vehicle commands
 
@@ -469,7 +472,7 @@ export class KnotSVaaS
      * @param {*} [data] - Other data.
      * @private
      */
-    private makeStationRequest(method: axios.Method, version: string, action: string, id?: number, data?: any)
+    private makeStationRequest<T>(method: axios.Method, version: string, action: string, id?: number, data?: any)
     {
         let path: string;
         if (id)
@@ -485,7 +488,7 @@ export class KnotSVaaS
             path = `/${version}/${action}`;
         }
 
-        return this.makeRequest(method, `${this.#options.stationsEndpoint || 'https://staas.knotcity.io'}${path}`, data);
+        return this.makeRequest<T>(method, `${this.#options.stationsEndpoint || 'https://staas.knotcity.io'}${path}`, data);
     }
 
     /**
@@ -497,7 +500,7 @@ export class KnotSVaaS
      * @param {*} [data] - Other data.
      * @private
      */
-    private makeVehicleRequest(method: axios.Method, version: string, action: string, id?: number, data?: any)
+    private makeVehicleRequest<T>(method: axios.Method, version: string, action: string, id?: number, data?: any)
     {
         let path: string;
         if (id)
@@ -512,7 +515,7 @@ export class KnotSVaaS
         {
             path = `/${version}/${action}`;
         }
-        return this.makeRequest(method, `${this.#options.vehiclesEndpoint || 'https://vaas.knotcity.io'}${path}`, data);
+        return this.makeRequest<T>(method, `${this.#options.vehiclesEndpoint || 'https://vaas.knotcity.io'}${path}`, data);
     }
 
     /**
@@ -522,7 +525,7 @@ export class KnotSVaaS
      * @param {*} [data] - Other data.
      * @private
      */
-    private async makeRequest(method: axios.Method, url: string, data?: any)
+    private async makeRequest<T>(method: axios.Method, url: string, data?: any)
     {
         const results = await this.#ax({
             method,
@@ -530,6 +533,6 @@ export class KnotSVaaS
             url,
             validateStatus: (status) => status >= 200 && status < 500
         });
-        return results.data as RequestResults<any>;
+        return results.data as T;
     }
 }

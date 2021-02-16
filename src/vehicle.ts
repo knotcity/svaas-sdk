@@ -1,4 +1,4 @@
-import type { RequestResults } from './lib';
+import type { RequestResultsWithData } from './lib';
 
 /**
  * Enum for the vehicle event type.
@@ -131,12 +131,12 @@ interface EnabledVehiclesInterface extends DisabledVehiclesInterface
 /**
  * Type describing the data returned when requesting information about a vehicle.
  */
-export type VehicleInformation = RequestResults<VehicleInformationInterface>;
+export type VehicleInformation = RequestResultsWithData<VehicleInformationInterface>;
 /**
  * Type describing the data returned when requesting list of the enabled vehicles.
  */
-export type EnabledVehicles = RequestResults<EnabledVehiclesInterface[]>;
+export type EnabledVehicles = RequestResultsWithData<EnabledVehiclesInterface[]>;
 /**
  * Type describing the data returned when requesting list of the disabled vehicles.
  */
-export type DisabledVehicles = RequestResults<DisabledVehiclesInterface[]>;
+export type DisabledVehicles = RequestResultsWithData<DisabledVehiclesInterface[]>;

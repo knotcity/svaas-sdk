@@ -1,4 +1,4 @@
-import type { RequestResults } from './lib';
+import type { RequestResultsWithData } from './lib';
 
 /**
  * Enum for the event station type.
@@ -216,15 +216,15 @@ interface EnabledStationsInterface extends DisabledStationsInterface
 /**
  * Type describing the data returned when requesting information about a station.
  */
-export type StationInformation = RequestResults<StationInformationInterface>;
+export type StationInformation = RequestResultsWithData<StationInformationInterface>;
 /**
  * Type describing the data returned when requesting list of the enabled stations.
  */
-export type EnabledStations = RequestResults<EnabledStationsInterface[]>;
+export type EnabledStations = RequestResultsWithData<EnabledStationsInterface[]>;
 /**
  * Type describing the data returned when requesting list of the disabled stations.
  */
-export type DisabledStations = RequestResults<DisabledStationsInterface[]>;
+export type DisabledStations = RequestResultsWithData<DisabledStationsInterface[]>;
 
 /**
  * Station configuration types.
