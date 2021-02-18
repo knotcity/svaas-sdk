@@ -60,6 +60,10 @@ interface KnotSVaaSOptions
      * Key's identifier.
      */
     keyId: string;
+    /**
+     * Axios' configuration.
+     */
+    AxiosRequestConfig?: axios.AxiosRequestConfig;
 }
 
 /**
@@ -545,12 +549,11 @@ export class KnotSVaaS
      */
     private async makeRequest<T>(method: axios.Method, url: string, data?: any)
     {
-        const results = await this.#ax({
+        const results = await this.#ax(Object.assign(this.#options.AxiosRequestConfig, {
             method,
             data,
-            url,
-            validateStatus: (status) => status >= 200 && status < 500
-        });
+            url
+        }));
         return results.data as T;
     }
 }
