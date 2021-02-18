@@ -114,10 +114,14 @@ interface DisabledVehiclesInterface
  */
 interface VehicleInformationInterface extends DisabledVehiclesInterface
 {
+    vehicle_id: number,
     model_name: string,
     activation_date: Date | null,
     model_type: string,
-    manufacturer: string
+    manufacturer: string,
+    imei: string,
+    online: boolean | null,
+    locked: boolean | null
 }
 /**
  * Enabled vehicles interface

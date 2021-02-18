@@ -192,11 +192,13 @@ interface DisabledStationsInterface
  */
 interface StationInformationInterface extends DisabledStationsInterface
 {
+    station_id: number,
     model_name: string,
     manufacturer: string,
     model_type: string,
     activation_date: Date | null,
     online: boolean,
+    spots_count: number,
     spots: {
         spot_id: number,
         vehicle: number | null,
