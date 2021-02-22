@@ -63,7 +63,7 @@ interface KnotSVaaSOptions
     /**
      * Axios' configuration.
      */
-    AxiosRequestConfig?: axios.AxiosRequestConfig;
+    axiosRequestConfig?: axios.AxiosRequestConfig;
 }
 
 /**
@@ -549,7 +549,7 @@ export class KnotSVaaS
      */
     private async makeRequest<T>(method: axios.Method, url: string, data?: any)
     {
-        const results = await this.#ax(Object.assign(this.#options.AxiosRequestConfig, {
+        const results = await this.#ax(Object.assign(this.#options.axiosRequestConfig, {
             method,
             data,
             url

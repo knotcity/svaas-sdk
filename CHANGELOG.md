@@ -1,3 +1,9 @@
+# 1.1.0 / 2021-02-22
+
+## :tada: Enhancements
+
+* Add a new parameter in KnotSVaaS class to customize Axios configs
+
 # 1.0.2 / 2021-02-16
 
 ## :bug: Fixes
