@@ -32,67 +32,67 @@ export enum VehicleSoundType
  * Base type for vehicle events.
  */
 type EventVehicleBase = {
-    event: EventVehicleType,
-    vehicle: number
+    event: EventVehicleType;
+    vehicle: number;
 }
 
 /**
  * Type for the vehicle unlocked event.
  */
 export type UnlockedVehicleEvent = EventVehicleBase & {
-    event: EventVehicleType.UNLOCKED,
+    event: EventVehicleType.UNLOCKED;
     data: {
-        unlock: number,
-        time: number
-    }
+        unlock: number;
+        time: number;
+    };
 };
 
 /**
  * Type for the vehicle locked event.
  */
 export type LockedVehicleEvent = EventVehicleBase & {
-    event: EventVehicleType.LOCKED,
+    event: EventVehicleType.LOCKED;
     data: {
-        lock: number,
-        time: number
-    }
+        lock: number;
+        time: number;
+    };
 };
 
 /**
  * Type for the vehicle location event.
  */
 export type LocationVehicleEvent = EventVehicleBase & {
-    event: EventVehicleType.LOCATION,
+    event: EventVehicleType.LOCATION;
     data: {
-        status: 'valid',
-        latitude: number,
-        longitude: number
+        status: 'valid';
+        latitude: number;
+        longitude: number;
     } | {
-        status: 'invalid',
-    }
+        status: 'invalid';
+    };
 };
 
 /**
  * Type for the vehicle status event.
  */
 export type StatusVehicleEvent = EventVehicleBase & {
-    event: EventVehicleType.STATUS,
+    event: EventVehicleType.STATUS;
     data: {
-        online: boolean,
-        locked: boolean,
-        batteryPercentage: number,
-        odometer: number
-    }
+        online: boolean;
+        locked: boolean;
+        batteryPercentage: number;
+        odometer: number;
+    };
 };
 
 /**
  * Type for the vehicle lock failed event.
  */
 export type LockFailedVehicleEvent = EventVehicleBase & {
-    event: EventVehicleType.LOCK_FAILED,
+    event: EventVehicleType.LOCK_FAILED;
     data: {
-        message: string
-    }
+        message: string;
+    };
 };
 
 /**
@@ -106,8 +106,8 @@ export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | Locat
  */
 interface DisabledVehiclesInterface
 {
-    vehicle_id: number,
-    imei: string
+    vehicle_id: number;
+    imei: string;
 }
 /**
  * Vehicle information interface
@@ -115,14 +115,14 @@ interface DisabledVehiclesInterface
  */
 interface VehicleInformationInterface extends DisabledVehiclesInterface
 {
-    vehicle_id: number,
-    model_name: string,
-    activation_date: Date | null,
-    model_type: string,
-    manufacturer: string,
-    imei: string,
-    online: boolean | null,
-    locked: boolean | null
+    vehicle_id: number;
+    model_name: string;
+    activation_date: Date | null;
+    model_type: string;
+    manufacturer: string;
+    imei: string;
+    online: boolean | null;
+    locked: boolean | null;
 }
 /**
  * Enabled vehicles interface
@@ -130,7 +130,7 @@ interface VehicleInformationInterface extends DisabledVehiclesInterface
  */
 interface EnabledVehiclesInterface extends DisabledVehiclesInterface
 {
-    activation_date: Date
+    activation_date: Date;
 }
 
 /**

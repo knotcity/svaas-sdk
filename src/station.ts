@@ -49,126 +49,126 @@ export enum BadgeReaderStatus
  * Base type for station events.
  */
 type EventStationBase = {
-    event: EventStationType,
-    station: number
+    event: EventStationType;
+    station: number;
 }
 
 /**
  * Type for the station connected event.
  */
 export type ConnectedStationEvent = EventStationBase & {
-    event: EventStationType.CONNECTED,
+    event: EventStationType.CONNECTED;
 };
 
 /**
  * Type for the station disconnected event.
  */
 export type DisconnectedStationEvent = EventStationBase & {
-    event: EventStationType.DISCONNECTED,
+    event: EventStationType.DISCONNECTED;
     data: {
-        reason: string,
-        error: boolean
-    }
+        reason: string;
+        error: boolean;
+    };
 };
 
 /**
  * Type for the station unlocked event.
  */
 export type UnlockedStationEvent = EventStationBase & {
-    event: EventStationType.UNLOCKED,
+    event: EventStationType.UNLOCKED;
     data: {
-        spot: number,
-        unlock: number
-    }
+        spot: number;
+        unlock: number;
+    };
 };
 
 /**
  * Type for the station locked event.
  */
 export type LockedStationEvent = {
-    event: EventStationType.LOCKED,
+    event: EventStationType.LOCKED;
     data: {
-        spot: number,
-        vehicle: number,
-        cache_accepted: boolean,
-        time: number
-    }
+        spot: number;
+        vehicle: number;
+        cache_accepted: boolean;
+        time: number;
+    };
 };
 
 /**
  * Type for the station boot event.
  */
 export type BootStationEvent = EventStationBase & {
-    event: EventStationType.BOOT,
+    event: EventStationType.BOOT;
 };
 
 /**
  * Type for the station state event.
  */
 export type StateStationEvent = EventStationBase & {
-    event: EventStationType.STATE,
+    event: EventStationType.STATE;
     data: {
-        mainboard: number,
-        vehicles: number[]
-    }
+        mainboard: number;
+        vehicles: number[];
+    };
 };
 
 /**
  * Type for the station shake event.
  */
 export type ShakeStationEvent = EventStationBase & {
-    event: EventStationType.SHAKE,
+    event: EventStationType.SHAKE;
 };
 
 /**
  * Type for the high station temperature event.
  */
 export type HighTempStationEvent = EventStationBase & {
-    event: EventStationType.HIGH_TEMP,
+    event: EventStationType.HIGH_TEMP;
     data: {
-        temperature: number,
-        critical: boolean
-    }
+        temperature: number;
+        critical: boolean;
+    };
 };
 
 /**
  * Type for the station critical energy event.
  */
 export type CriticalEnergyStationEvent = EventStationBase & {
-    event: EventStationType.ENERGY_CRITICAL,
+    event: EventStationType.ENERGY_CRITICAL;
 };
 
 /**
  * Type for the station unexpected unlock event.
  */
 export type UnexpectedUnlockStationEvent = EventStationBase & {
-    event: EventStationType.UNEXPECTED_UNLOCK,
+    event: EventStationType.UNEXPECTED_UNLOCK;
     data: {
-        spot: number
-    }
+        spot: number;
+    };
 };
 
 /**
  * Type for the station spot defect event.
  */
 export type SpotDefectStationEvent = EventStationBase & {
-    event: EventStationType.SPOT_DEFECT,
+    event: EventStationType.SPOT_DEFECT;
     data: {
-        spot: number,
-        vehicle: number,
-        vehicle_voltage: number,
-        lock_status: number
-    }
+        spot: number;
+        vehicle: number;
+        vehicle_voltage: number;
+        lock_status: number;
+    };
 };
 
 /**
  * Type for the station badge reading event.
  */
 export type BadgeRFIDStationEvent = EventStationBase & {
-    event: EventStationType.BADGE_RFID,
+    event: EventStationType.BADGE_RFID;
     data: {
-        badge_id: string
-    }
+        badge_id: string;
+    };
 };
 
 /**
@@ -183,8 +183,8 @@ export type KnotStationEvent = ConnectedStationEvent | DisconnectedStationEvent 
  */
 interface DisabledStationsInterface
 {
-    station_id: number,
-    spots_count: number
+    station_id: number;
+    spots_count: number;
 }
 /**
  * Station information interface
@@ -192,18 +192,18 @@ interface DisabledStationsInterface
  */
 interface StationInformationInterface extends DisabledStationsInterface
 {
-    station_id: number,
-    model_name: string,
-    manufacturer: string,
-    model_type: string,
-    activation_date: Date | null,
-    online: boolean,
-    spots_count: number,
+    station_id: number;
+    model_name: string;
+    manufacturer: string;
+    model_type: string;
+    activation_date: Date | null;
+    online: boolean;
+    spots_count: number;
     spots: {
-        spot_id: number,
-        vehicle: number | null,
-        lock: 0 | 1
-    }[]
+        spot_id: number;
+        vehicle: number | null;
+        lock: 0 | 1;
+    }[];
 }
 /**
  * Enabled stations interface
@@ -211,8 +211,8 @@ interface StationInformationInterface extends DisabledStationsInterface
  */
 interface EnabledStationsInterface extends DisabledStationsInterface
 {
-    activation_date: Date,
-    online: boolean
+    activation_date: Date;
+    online: boolean;
 }
 
 /**

@@ -28,8 +28,8 @@ export type RequestResults = {
 
 export type RequestResultsFailure = RequestResults & { code: Exclude<KnotCode, KnotCode.SUCCESS> };
 export type RequestResultsSuccessWithData<T = any> = RequestResults & {
-    code: KnotCode.SUCCESS
-    data: T
+    code: KnotCode.SUCCESS;
+    data: T;
 };
 
 export type RequestResultsWithData<T> = RequestResultsFailure | RequestResultsSuccessWithData<T>;
@@ -72,9 +72,9 @@ interface KnotSVaaSOptions
  */
 interface SignatureEvent
 {
-    headers: { [key: string]: any },
-    httpMethod: string,
-    path: string
+    headers: { [key: string]: any };
+    httpMethod: string;
+    path: string;
 }
 
 /**

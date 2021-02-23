@@ -8,6 +8,10 @@
 
 * Fix getEnabledVehicles and getEnabledStations
 
+## :nut_and_bolt: Other
+
+* Update eslint config and fix files
+
 # 1.0.2 / 2021-02-16
 
 ## :bug: Fixes
