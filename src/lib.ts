@@ -133,6 +133,10 @@ export class KnotSVaaS
         {
             throw new SVaaSError('The given privateKey should be a string');
         }
+        if (!options.axiosRequestConfig)
+        {
+            options.axiosRequestConfig = {};
+        }
 
         this.#options = options;
         this.#ax = axios.default.create({ validateStatus: status => status === 200 });
@@ -304,7 +308,7 @@ export class KnotSVaaS
         {
             requestResults.data.forEach((r: any) =>
             {
-                r.activation_date = new Date(r.data.activation_date);
+                r.activation_date = new Date(r.activation_date);
                 return r;
             });
         }
@@ -390,7 +394,7 @@ export class KnotSVaaS
      */
     enableVehicle(vehicleId: number): Promise<RequestResults>
     {
-        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'enable', vehicleId);
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'enable', vehicleId, {});
     }
 
     /**
@@ -429,7 +433,7 @@ export class KnotSVaaS
         {
             requestResults.data.forEach((r: any) =>
             {
-                r.activation_date = new Date(r.data.activation_date);
+                r.activation_date = new Date(r.activation_date);
                 return r;
             });
         }
