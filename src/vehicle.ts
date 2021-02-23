@@ -106,7 +106,8 @@ export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | Locat
  */
 interface DisabledVehiclesInterface
 {
-    vehicle_id: number
+    vehicle_id: number,
+    imei: string
 }
 /**
  * Vehicle information interface
