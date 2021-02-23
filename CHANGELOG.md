@@ -4,6 +4,10 @@
 
 * Add a new parameter in KnotSVaaS class to customize Axios configs
 
+## :bug: Fixes
+
+* Fix getEnabledVehicles and getEnabledStations
+
 # 1.0.2 / 2021-02-16
 
 ## :bug: Fixes
