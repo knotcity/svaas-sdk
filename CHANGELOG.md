@@ -1,3 +1,9 @@
+# 1.1.1 / 2021-03-01
+
+## :nut_and_bolt: Other
+
+* Add alarm-threshold in StationConfigType
+
 # 1.1.0 / 2021-02-22
 
 ## :tada: Enhancements

@@ -231,4 +231,4 @@ export type DisabledStations = RequestResultsWithData<DisabledStationsInterface[
 /**
  * Station configuration types.
  */
-export type StationConfigType = 'volume';
+export type StationConfigType = 'volume' | 'alarm-threshold';
