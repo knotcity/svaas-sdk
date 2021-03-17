@@ -346,14 +346,14 @@ export class KnotSVaaS
     /**
      * Lock a vehicle in freefloating.
      * @param {number} vehicleId - The identifier of the vehicle.
-     * @param {number} lockId - An identifier to track this lock request. This will be sent back in the locked event.
+     * @param {number} lockId - An identifier to track this lock request. This will be sent back in the locked event. Warning, 0 is used for automatic locks when a vehicle enter a station so it can be difficult to differentiate them from your requests if you use it.
      * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1lock/post
      */
     lockVehicle(vehicleId: number, lockId: number): Promise<RequestResults>
     {
-        if (!Number.isInteger(lockId) || lockId < 1)
+        if (!Number.isInteger(lockId) || lockId < 0)
         {
-            throw new SVaaSError('Lock ID should be an integer greater or equal to 1');
+            throw new SVaaSError('Lock ID should be an integer greater or equal to 0');
         }
         return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'lock', vehicleId, {
             lock: lockId
