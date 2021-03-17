@@ -1,3 +1,9 @@
+# 1.1.2 / 2021-03-17
+
+## :bug: Fixes
+
+* Allow lockId 0 for lockVehicles
+
 # 1.1.1 / 2021-03-01
 
 ## :nut_and_bolt: Other
