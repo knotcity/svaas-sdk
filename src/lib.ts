@@ -558,6 +558,11 @@ export class KnotSVaaS
             data,
             url
         }));
+
+        if (results.data.code === undefined)
+        {
+            throw new SVaaSError(`Request return an error: ${JSON.stringify(results.data)}`);
+        }
         return results.data as T;
     }
 }
