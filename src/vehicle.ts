@@ -29,6 +29,18 @@ export enum VehicleSoundType
 }
 
 /**
+ * Enum for the vehicle sound type.
+ * @readonly
+ * @enum {string}
+ */
+export enum VehicleLightState
+{
+    OFF = 'off',
+    ON = 'on',
+    FLICKER = 'flicker'
+}
+
+/**
  * Base type for vehicle events.
  */
 type EventVehicleBase = {
@@ -145,3 +157,13 @@ export type EnabledVehicles = RequestResultsWithData<EnabledVehiclesInterface[]>
  * Type describing the data returned when requesting list of the disabled vehicles.
  */
 export type DisabledVehicles = RequestResultsWithData<DisabledVehiclesInterface[]>;
+/**
+ * Station configuration type.
+ */
+export type VehicleConfigType = { 
+    lowSpeedLimit?: number; 
+    mediumSpeedLimit?: number; 
+    highSpeedLimit?: number; 
+    cruiseControl?: boolean;
+    buttonSwitchSpeedMode?: boolean;
+};

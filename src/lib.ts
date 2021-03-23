@@ -17,7 +17,14 @@ import type {
     StationConfigType,
     StationInformation
 } from './station';
-import type { DisabledVehicles, EnabledVehicles, KnotVehicleEvent, VehicleInformation } from './vehicle';
+import type {
+    DisabledVehicles,
+    EnabledVehicles,
+    KnotVehicleEvent,
+    VehicleConfigType,
+    VehicleInformation
+} from './vehicle';
+import { VehicleLightState, VehicleSoundType } from './vehicle';
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
 
@@ -363,12 +370,12 @@ export class KnotSVaaS
     /**
      * Request a vehicle to play a sound.
      * @param {number} vehicleId - The identifier of the vehicle.
-     * @param {('geo-fence'|'toot'|'low_battery')} soundType - The name of the sound to play.
+     * @param {VehicleSoundType} soundType - The name of the sound to play.
      * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1sound/post
      */
-    emitVehicleSound(vehicleId: number, soundType: 'geo-fence' | 'toot' | 'low_battery'): Promise<RequestResults>
+    emitVehicleSound(vehicleId: number, soundType: VehicleSoundType): Promise<RequestResults>
     {
-        if (soundType != 'geo-fence' && soundType !=  'toot' && soundType !=  'low_battery')
+        if (soundType != VehicleSoundType.GEO_FENCE && soundType != VehicleSoundType.TOOT && soundType != VehicleSoundType.LOW_BATTERY)
         {
             throw new SVaaSError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
         }
@@ -405,6 +412,54 @@ export class KnotSVaaS
     shutdownVehicle(vehicleId: number): Promise<RequestResults>
     {
         return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'shutdown', vehicleId);
+    }
+
+    /**
+     * Update a vehicle configuration.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @param {VehicleConfigType} config - Element to be configured on the vehicle
+     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config/post
+     */
+    configureVehicle(vehicleId: number, config: VehicleConfigType): Promise<RequestResults>
+    {
+        if (config.lowSpeedLimit !== undefined && (!Number.isInteger(config.lowSpeedLimit) || config.lowSpeedLimit < 6 || config.lowSpeedLimit > 25))
+        {
+            throw new SVaaSError('Low speed limit should be an integer between 6 and 25 or undefined');
+        }
+        if (config.mediumSpeedLimit !== undefined && (!Number.isInteger(config.mediumSpeedLimit) || config.mediumSpeedLimit < 6 || config.mediumSpeedLimit > 25))
+        {
+            throw new SVaaSError('Medium speed limit should be an integer between 6 and 25 or undefined');
+        }
+        if (config.highSpeedLimit !== undefined && (!Number.isInteger(config.highSpeedLimit) || config.highSpeedLimit < 6 || config.highSpeedLimit > 25))
+        {
+            throw new SVaaSError('High speed limit should be an integer between 6 and 25 or undefined');
+        }
+        if (config.cruiseControl !== undefined && typeof config.cruiseControl !== 'boolean')
+        {
+            throw new SVaaSError('Cruise control should be a boolean or undefined');
+        }
+        if (config.buttonSwitchSpeedMode !== undefined && typeof config.buttonSwitchSpeedMode !== 'boolean')
+        {
+            throw new SVaaSError('Button switch speed mode should be a boolean or undefined');
+        }
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'config', vehicleId, config);
+    }
+
+    /**
+     * Request a vehicle to change the light state.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @param {VehicleLightState} lightState - New vehicle light state
+     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config/post
+     */
+    changeVehicleLightState(vehicleId: number, lightState: VehicleLightState ): Promise<RequestResults>
+    {
+        if (lightState != VehicleLightState.OFF && lightState != VehicleLightState.ON && lightState != VehicleLightState.FLICKER)
+        {
+            throw new SVaaSError('Light state should be an string equal to \'off\', \'on\' or \'flicker\'');
+        }
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'light', vehicleId, {
+            state: lightState
+        });
     }
 
     /**
