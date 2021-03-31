@@ -21,7 +21,7 @@ import type {
     DisabledVehicles,
     EnabledVehicles,
     KnotVehicleEvent,
-    VehicleConfigType,
+    VehicleConfig,
     VehicleInformation
 } from './vehicle';
 import { VehicleLightState, VehicleSoundType } from './vehicle';
@@ -417,10 +417,10 @@ export class KnotSVaaS
     /**
      * Update a vehicle configuration.
      * @param {number} vehicleId - The identifier of the vehicle.
-     * @param {VehicleConfigType} config - Element to be configured on the vehicle
+     * @param {VehicleConfig} config - Element to be configured on the vehicle
      * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config/post
      */
-    configureVehicle(vehicleId: number, config: VehicleConfigType): Promise<RequestResults>
+    configureVehicle(vehicleId: number, config: VehicleConfig): Promise<RequestResults>
     {
         if (config.lowSpeedLimit !== undefined && (!Number.isInteger(config.lowSpeedLimit) || config.lowSpeedLimit < 6 || config.lowSpeedLimit > 25))
         {

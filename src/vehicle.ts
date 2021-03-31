@@ -160,7 +160,7 @@ export type DisabledVehicles = RequestResultsWithData<DisabledVehiclesInterface[
 /**
  * Station configuration type.
  */
-export type VehicleConfigType = { 
+export type VehicleConfig = {
     lowSpeedLimit?: number; 
     mediumSpeedLimit?: number; 
     highSpeedLimit?: number; 
