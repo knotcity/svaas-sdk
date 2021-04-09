@@ -1,3 +1,9 @@
+# 1.2.1 / 2021-03-31
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies
+
 # 1.2.0 / 2021-03-31
 
 ## :tada: Enhancements
