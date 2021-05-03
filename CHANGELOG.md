@@ -1,3 +1,9 @@
+# 1.2.2 / 2021-05-03
+
+## :nut_and_bolt: Other
+
+* Add missing Knot code
+
 # 1.2.1 / 2021-03-31
 
 ## :nut_and_bolt: Other
