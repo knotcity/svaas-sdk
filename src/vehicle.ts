@@ -41,6 +41,18 @@ export enum VehicleLightState
 }
 
 /**
+ * Enum for the vehicle speed mode.
+ * @readonly
+ * @enum {string}
+ */
+export enum VehicleSpeedMode
+{
+    ECO = 1,
+    NORMAL = 2,
+    SPORT = 3
+}
+
+/**
  * Base type for vehicle events.
  */
 type EventVehicleBase = {

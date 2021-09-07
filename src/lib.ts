@@ -24,7 +24,7 @@ import type {
     VehicleConfig,
     VehicleInformation
 } from './vehicle';
-import { VehicleLightState, VehicleSoundType } from './vehicle';
+import { VehicleLightState, VehicleSoundType, VehicleSpeedMode } from './vehicle';
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
 
@@ -459,6 +459,23 @@ export class KnotSVaaS
         }
         return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'light', vehicleId, {
             state: lightState
+        });
+    }
+
+    /**
+     * Request a vehicle to change the speed mode.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @param {VehicleSpeedMode} speedMode - New vehicle speed mode
+     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1speed-mode/put
+     */
+    changeVehicleSpeedMode(vehicleId: number, speedMode: VehicleSpeedMode ): Promise<RequestResults>
+    {
+        if (speedMode != VehicleSpeedMode.ECO && speedMode != VehicleSpeedMode.NORMAL && speedMode != VehicleSpeedMode.SPORT)
+        {
+            throw new SVaaSError('Light state should be an number equal to \'1\', \'2\' or \'3\'');
+        }
+        return this.makeVehicleRequest<RequestResults>('PUT', 'v1', 'speed-mode', vehicleId, {
+            speed_mode: speedMode
         });
     }
 
