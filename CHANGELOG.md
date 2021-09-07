@@ -4,6 +4,10 @@
 
 * Add changeVehicleSpeedMode function
 
+## :nut_and_bolt: Other
+
+* Update documentation URL
+
 # 1.2.2 / 2021-05-03
 
 ## :nut_and_bolt: Other

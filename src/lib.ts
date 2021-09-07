@@ -180,7 +180,7 @@ export class KnotSVaaS
     /**
      * Request a station to reboot.
      * @param {number} stationId - The identifier of the station.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1{stationId}~1reboot/post
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1reboot/post
      */
     rebootStation(stationId: number): Promise<RequestResults>
     {
@@ -190,7 +190,7 @@ export class KnotSVaaS
     /**
      * Ping a station.
      * @param {number} stationId - The identifier of the station.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1{stationId}~1ping/post
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1ping/post
      */
     pingStation(stationId: number): Promise<RequestResults>
     {
@@ -202,7 +202,7 @@ export class KnotSVaaS
      * @param {number} stationId - The identifier of the station.
      * @param {StationConfigType} type - The name of the configuration to edit.
      * @param {number} value - The value of the configuration.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1{stationId}~1config/post
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1config/post
      */
     configureStation(stationId: number, type: StationConfigType, value: number): Promise<RequestResults>
     {
@@ -218,7 +218,7 @@ export class KnotSVaaS
      * @param {number} spotId - The identifier of the spot to unlock.
      * @param {number} unlockId - An identifier to track this unlock request. This will be sent back in the unlocked event.
      * @param {boolean} ignoreVehicleResponse - When true, we ignore the vehicle unlock response if there is vehicle with IoT on the spot. Useful for maintenance as it allow to unlock a spot with a broken or unavailable vehicle.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1{stationId}~1unlock/post
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1unlock/post
      */
     unlockSpot(stationId: number, spotId: number, unlockId: number, ignoreVehicleResponse?: boolean): Promise<RequestResults>
     {
@@ -244,7 +244,7 @@ export class KnotSVaaS
     /**
      * Request a station to scan all of its spots. For each spot with a vehicle in, the station will re-send the locked event.
      * @param {number} stationId - The identifier of the station.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1{stationId}~1refresh/post
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1refresh/post
      */
     scanAllStationSpot(stationId: number): Promise<RequestResults>
     {
@@ -256,7 +256,7 @@ export class KnotSVaaS
      * @param {number} stationId - The identifier of the station.
      * @param {number} spotId - The identifier of the spot to which to send the lock response.
      * @param {ConfirmLockAnswer} accepted - Response status of the vehicle's lock on the station.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1{stationId}~1lock-response/post
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1lock-response/post
      */
     confirmLockSpot(stationId: number, spotId: number, accepted: ConfirmLockAnswer): Promise<RequestResults>
     {
@@ -270,7 +270,7 @@ export class KnotSVaaS
      * Send a feedback to the badge reader of a station. This is used as a response to the badge event to show a success or failure to the user.
      * @param {number} stationId - The identifier of the station.
      * @param {BadgeReaderStatus} status - Type of feedback.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1{stationId}~1badge/post
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1badge/post
      */
     badgeReaderFeedback(stationId: number, status: BadgeReaderStatus): Promise<RequestResults>
     {
@@ -282,7 +282,7 @@ export class KnotSVaaS
     /**
      * Enable a station.
      * @param {number} stationId - The identifier of the station.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1enabled/get
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1enabled/get
      */
     enableStation(stationId: number): Promise<RequestResults>
     {
@@ -292,7 +292,7 @@ export class KnotSVaaS
     /**
      * Get a station's information and current state.
      * @param {number} stationId - The identifier of the station.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1{stationId}/get
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}/get
      */
     async getStationInformation(stationId: number): Promise<StationInformation>
     {
@@ -306,7 +306,7 @@ export class KnotSVaaS
 
     /**
      * Get the list of enabled stations.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1enabled/get
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1enabled/get
      */
     async getEnabledStations(): Promise<EnabledStations>
     {
@@ -324,7 +324,7 @@ export class KnotSVaaS
 
     /**
      * Get the list of disabled stations.
-     * @documentation https://doc.knotcity.io/services/station/request/swagger.html#/paths/~1v1~1disabled/get
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1disabled/get
      */
     getDisabledStations(): Promise<DisabledStations>
     {
@@ -337,7 +337,7 @@ export class KnotSVaaS
      * Unlock a vehicle. This will also unlock the spot on which the vehicle is (if it is on a spot).
      * @param {number} vehicleId - The identifier of the vehicle.
      * @param {number} unlockId - An identifier to track this unlock request. This will be sent back in the unlocked event.
-     * @description https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1unlock/post
+     * @description https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1unlock/post
      */
     unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
     {
@@ -354,7 +354,7 @@ export class KnotSVaaS
      * Lock a vehicle in freefloating.
      * @param {number} vehicleId - The identifier of the vehicle.
      * @param {number} lockId - An identifier to track this lock request. This will be sent back in the locked event. Warning, 0 is used for automatic locks when a vehicle enter a station so it can be difficult to differentiate them from your requests if you use it.
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1lock/post
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1lock/post
      */
     lockVehicle(vehicleId: number, lockId: number): Promise<RequestResults>
     {
@@ -371,7 +371,7 @@ export class KnotSVaaS
      * Request a vehicle to play a sound.
      * @param {number} vehicleId - The identifier of the vehicle.
      * @param {VehicleSoundType} soundType - The name of the sound to play.
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1sound/post
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1sound/post
      */
     emitVehicleSound(vehicleId: number, soundType: VehicleSoundType): Promise<RequestResults>
     {
@@ -387,7 +387,7 @@ export class KnotSVaaS
     /**
      * Send request to open the battery cover of the vehicle.
      * @param {number} vehicleId - The identifier of the vehicle.
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1battery-cover/post
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1battery-cover/post
      */
     openVehicleBatteryCover(vehicleId: number): Promise<RequestResults>
     {
@@ -397,7 +397,7 @@ export class KnotSVaaS
     /**
      * Enable a vehicle.
      * @param {number} vehicleId - The identifier of the vehicle.
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1enable/post
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1enable/post
      */
     enableVehicle(vehicleId: number): Promise<RequestResults>
     {
@@ -407,7 +407,7 @@ export class KnotSVaaS
     /**
      * Request a vehicle to shutdown (ex: for the transport). WARNING: you need a physical action to restart the scooter.
      * @param {number} vehicleId - The identifier of the vehicle.
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1shutdown/post
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1shutdown/post
      */
     shutdownVehicle(vehicleId: number): Promise<RequestResults>
     {
@@ -418,7 +418,7 @@ export class KnotSVaaS
      * Update a vehicle configuration.
      * @param {number} vehicleId - The identifier of the vehicle.
      * @param {VehicleConfig} config - Element to be configured on the vehicle
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config/post
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config/post
      */
     configureVehicle(vehicleId: number, config: VehicleConfig): Promise<RequestResults>
     {
@@ -449,7 +449,7 @@ export class KnotSVaaS
      * Request a vehicle to change the light state.
      * @param {number} vehicleId - The identifier of the vehicle.
      * @param {VehicleLightState} lightState - New vehicle light state
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config/post
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config/post
      */
     changeVehicleLightState(vehicleId: number, lightState: VehicleLightState ): Promise<RequestResults>
     {
@@ -466,7 +466,7 @@ export class KnotSVaaS
      * Request a vehicle to change the speed mode.
      * @param {number} vehicleId - The identifier of the vehicle.
      * @param {VehicleSpeedMode} speedMode - New vehicle speed mode
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1speed-mode/put
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1speed-mode/put
      */
     changeVehicleSpeedMode(vehicleId: number, speedMode: VehicleSpeedMode ): Promise<RequestResults>
     {
@@ -482,7 +482,7 @@ export class KnotSVaaS
     /**
      * Get a vehicle's information.
      * @param {number} vehicleId - The identifier of the vehicle.
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}/get
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}/get
      */
     async getVehicleInformation(vehicleId: number): Promise<VehicleInformation>
     {
@@ -496,7 +496,7 @@ export class KnotSVaaS
 
     /**
      * Get the list of enabled vehicles.
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1enabled/get
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1enabled/get
      */
     async getEnabledVehicles(): Promise<EnabledVehicles>
     {
@@ -514,7 +514,7 @@ export class KnotSVaaS
 
     /**
      * Get the list of disabled vehicles.
-     * @documentation https://doc.knotcity.io/services/vehicle/request/swagger.html#/paths/~1v1~1disabled/get
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1disabled/get
      */
     getDisabledVehicles(): Promise<DisabledVehicles>
     {
@@ -526,7 +526,7 @@ export class KnotSVaaS
     /**
      * Check a request's signature comming from Knot SVaaS.
      * @param {SignatureEvent} event - Information needed to check the signature.
-     * @documentation https://doc.knotcity.io/services/http-signature/
+     * @documentation https://doc.knotcity.io/svaas/http-signature/
      */
     checkKnotEventSignature(event: SignatureEvent)
     {
