@@ -297,7 +297,7 @@ export class KnotSVaaS
     async getStationInformation(stationId: number): Promise<StationInformation>
     {
         const requestResults = await this.makeStationRequest<StationInformation>('GET', 'v1', '', stationId);
-        if (requestResults.code == KnotCode.SUCCESS && requestResults.data.activation_date)
+        if (requestResults.code === KnotCode.SUCCESS && requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
         }
@@ -311,7 +311,7 @@ export class KnotSVaaS
     async getEnabledStations(): Promise<EnabledStations>
     {
         const requestResults = await this.makeStationRequest<EnabledStations>('GET', 'v1', 'enabled');
-        if (requestResults.code == KnotCode.SUCCESS)
+        if (requestResults.code === KnotCode.SUCCESS)
         {
             requestResults.data.forEach((r: any) =>
             {
@@ -375,7 +375,7 @@ export class KnotSVaaS
      */
     emitVehicleSound(vehicleId: number, soundType: VehicleSoundType): Promise<RequestResults>
     {
-        if (soundType != VehicleSoundType.GEO_FENCE && soundType != VehicleSoundType.TOOT && soundType != VehicleSoundType.LOW_BATTERY)
+        if (soundType !== VehicleSoundType.GEO_FENCE && soundType !== VehicleSoundType.TOOT && soundType !== VehicleSoundType.LOW_BATTERY)
         {
             throw new SVaaSError('Sound type should be an string equal to \'geo-fence\', \'toot\' or \'low_battery\'');
         }
@@ -453,7 +453,7 @@ export class KnotSVaaS
      */
     changeVehicleLightState(vehicleId: number, lightState: VehicleLightState ): Promise<RequestResults>
     {
-        if (lightState != VehicleLightState.OFF && lightState != VehicleLightState.ON && lightState != VehicleLightState.FLICKER)
+        if (lightState !== VehicleLightState.OFF && lightState !== VehicleLightState.ON && lightState !== VehicleLightState.FLICKER)
         {
             throw new SVaaSError('Light state should be an string equal to \'off\', \'on\' or \'flicker\'');
         }
@@ -470,7 +470,7 @@ export class KnotSVaaS
      */
     changeVehicleSpeedMode(vehicleId: number, speedMode: VehicleSpeedMode ): Promise<RequestResults>
     {
-        if (speedMode != VehicleSpeedMode.ECO && speedMode != VehicleSpeedMode.NORMAL && speedMode != VehicleSpeedMode.SPORT)
+        if (speedMode !== VehicleSpeedMode.ECO && speedMode !== VehicleSpeedMode.NORMAL && speedMode !== VehicleSpeedMode.SPORT)
         {
             throw new SVaaSError('Light state should be an number equal to \'1\', \'2\' or \'3\'');
         }
@@ -487,7 +487,7 @@ export class KnotSVaaS
     async getVehicleInformation(vehicleId: number): Promise<VehicleInformation>
     {
         const requestResults = await this.makeVehicleRequest<VehicleInformation>('GET', 'v1', '', vehicleId);
-        if ( requestResults.code == KnotCode.SUCCESS && requestResults.data.activation_date)
+        if ( requestResults.code === KnotCode.SUCCESS && requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
         }
@@ -501,7 +501,7 @@ export class KnotSVaaS
     async getEnabledVehicles(): Promise<EnabledVehicles>
     {
         const requestResults = await this.makeVehicleRequest<EnabledVehicles>('GET', 'v1', 'enabled');
-        if (requestResults.code == KnotCode.SUCCESS)
+        if (requestResults.code === KnotCode.SUCCESS)
         {
             requestResults.data.forEach((r: any) =>
             {
@@ -533,7 +533,7 @@ export class KnotSVaaS
         try
         {
             const headers = Object.entries(event.headers);
-            const authHeader = headers.find(e => e[0].toLocaleLowerCase() == 'authorization');
+            const authHeader = headers.find(e => e[0].toLocaleLowerCase() === 'authorization');
             if (!authHeader || typeof authHeader[1] !== 'string')
             {
                 return false;
