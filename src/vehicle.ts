@@ -179,3 +179,69 @@ export type VehicleConfig = {
     cruiseControl?: boolean;
     buttonSwitchSpeedMode?: boolean;
 };
+
+/**
+ * Enum for the vehicle alerts code.
+ * @readonly
+ * @enum {number}
+ */
+export enum VehicleAlertsCode {
+    ILLEGAL_MOVING = 1,
+    VEHICLE_DOWN= 2,
+    ILLEGAL_DISMANTLING = 3,
+    VEHICLE_WAS_LIFTED_UP = 4,
+    // Other
+    UNKNOWN_ALERT = 99, // Contact Knot Technical Support if you receive this alert code
+}
+
+/**
+ * Enum for the vehicle faults code.
+ * @readonly
+ * @enum {number}
+ */
+export enum VehicleFaultsCode {
+    // Global faults
+    INSTRUMENT_PANEL_AND_MAIN_CONTROL_COMMUNICATION = 100,
+    ACCELERATOR_HALL = 102,
+    LEFT_BRAKE_HALL = 103,
+    RIGHT_BRAKE_HALL = 104,
+    MOTOR_HALL = 105,
+    PROGRAM_SKIP_ERROR = 106,
+    IOT_AND_SCOOTER_COMMUNICATION_TIMEOUT = 107,
+    VEHICLE_DEFAULT_SERIAL_NUMBER = 108,
+    CHARGING_ERROR = 109,
+    BATTERY_TEMPERATURE_SENSOR = 110,
+    CONTROLLER_TEMPERATURE_SENSOR = 111,
+    OVER_MOTOR_TEMPERATURE = 112,
+    CHECKING_BATTERY_AND_CONTROLLER_FAILED = 113,
+    MAIN_CONTROLLER_AND_INSTRUMENT_PANEL_DOES_NOT_MATCH = 114,
+    MAIN_CONTROLLER_AND_SWAPPABLE_BATTERY_LOCK_DOES_NOT_MATCH = 115,
+    MAIN_CONTROLLER_AND_SWAPPABLE_COMMUNICATION = 116,
+    BATTERY_COVER_UNLOCKED = 117,
+    // IoT faults
+    ECU_COMMUNICATION = 200,
+    BACKUP_BATTERY = 201,
+    RTC_CLOCK = 202,
+    FILE_SYSTEM = 203,
+    I2C_COMMUNICATION = 204,
+    GNSS_COMMUNICATION = 205,
+    _4G_MODEM_COMMUNICATION = 206,
+    BLUETOOTH_COMMUNICATION = 207,
+    NFC_COMMUNICATION = 208,
+    G_Sensor_communication = 209,
+    // Motor faults
+    MOTOR_CURRENT_A_PHASE = 300,
+    MOTOR_CURRENT_B_PHASE = 301,
+    MOTOR_CURRENT_C_PHASE = 302,
+    // BMS faults
+    BATTERY_VOLTAGE_DETECTION = 400,
+    COMMUNICATION_BATTERY = 401,
+    BATTERY_PASSWORD_IS_WRONG = 402,
+    BATTERY_DEFAULT_SERIAL_NUMBER = 403,
+    // ECU faults
+    SYSTEM_VOLTAGE_DETECTION = 500,
+    FLASH_SAVE_ERROR = 501,
+    MASTER_CONTROL_PASSWORD_IS_WRONG = 502,
+    // Other faults
+    UNKNOWN_FAULT = 900, // Contact Knot Technical Support if you receive this fault code
+}
