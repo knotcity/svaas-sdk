@@ -1,3 +1,13 @@
+# 1.4.0 / 2021-09-28
+
+## :tada: Enhancements
+
+* Add vehicle alert and fault codes
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies
+
 # 1.3.0 / 2021-09-07
 
 ## :tada: Enhancements
