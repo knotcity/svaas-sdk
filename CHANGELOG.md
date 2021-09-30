@@ -1,3 +1,13 @@
+# 1.5.0 / 2021-09-30
+
+## :tada: Enhancements
+
+* Add vehicle fault status
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies
+
 # 1.4.0 / 2021-09-28
 
 ## :tada: Enhancements

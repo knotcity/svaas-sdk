@@ -195,6 +195,17 @@ export enum VehicleAlertsCode {
 }
 
 /**
+ * Enum for the vehicle fault status.
+ * @readonly
+ * @enum {string}
+ */
+export enum VehicleFaultStatus {
+    APPEARING = 'appearing',
+    DISAPPEARED = 'disappeared',
+    UNKNOWN = 'unknown',  // Contact Knot Technical Support if you receive this fault status
+}
+
+/**
  * Enum for the vehicle faults code.
  * @readonly
  * @enum {number}
