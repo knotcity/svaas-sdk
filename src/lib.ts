@@ -1,10 +1,11 @@
 import axios = require('axios');
 import reqSigner = require('@knotcity/http-request-signer');
-import {
-    AuthorizationHeaderComponents,
-    parseAuthorizationHeader,
-    verifyAuthorization
-} from '@knotcity/http-request-signer';
+import
+    {
+        AuthorizationHeaderComponents,
+        parseAuthorizationHeader,
+        verifyAuthorization
+    } from '@knotcity/http-request-signer';
 
 import { KnotCode } from './KnotCode';
 import { SVaaSError } from './SVaaSError';
@@ -149,13 +150,14 @@ export class KnotSVaaS
         this.#ax = axios.default.create({ validateStatus: status => status === 200 });
         this.#ax.interceptors.request.use(c =>
         {
-            c.headers['X-Knot-Date'] = +new Date();
+            c.headers = c.headers || {};
+            c.headers['X-Knot-Date'] = (+new Date()).toString();
             c.headers['X-Api-Key'] = this.#options.keyId;
             c.headers['Content-Type'] = 'application/json';
-            c.headers['Content-Length'] = c.data ? JSON.stringify(c.data).length : 0;
+            c.headers['Content-Length'] = (c.data ? JSON.stringify(c.data).length : 0).toString();
             try
             {
-                const url =  c.url ? new URL(c.url) : undefined;
+                const url = c.url ? new URL(c.url) : undefined;
                 c.headers['Authorization'] = reqSigner.generateAuthorization({
                     headers: c.headers,
                     method: c.method || 'POST',
@@ -451,7 +453,7 @@ export class KnotSVaaS
      * @param {VehicleLightState} lightState - New vehicle light state
      * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config/post
      */
-    changeVehicleLightState(vehicleId: number, lightState: VehicleLightState ): Promise<RequestResults>
+    changeVehicleLightState(vehicleId: number, lightState: VehicleLightState): Promise<RequestResults>
     {
         if (lightState !== VehicleLightState.OFF && lightState !== VehicleLightState.ON && lightState !== VehicleLightState.FLICKER)
         {
@@ -468,7 +470,7 @@ export class KnotSVaaS
      * @param {VehicleSpeedMode} speedMode - New vehicle speed mode
      * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1speed-mode/put
      */
-    changeVehicleSpeedMode(vehicleId: number, speedMode: VehicleSpeedMode ): Promise<RequestResults>
+    changeVehicleSpeedMode(vehicleId: number, speedMode: VehicleSpeedMode): Promise<RequestResults>
     {
         if (speedMode !== VehicleSpeedMode.ECO && speedMode !== VehicleSpeedMode.NORMAL && speedMode !== VehicleSpeedMode.SPORT)
         {
@@ -487,7 +489,7 @@ export class KnotSVaaS
     async getVehicleInformation(vehicleId: number): Promise<VehicleInformation>
     {
         const requestResults = await this.makeVehicleRequest<VehicleInformation>('GET', 'v1', '', vehicleId);
-        if ( requestResults.code === KnotCode.SUCCESS && requestResults.data.activation_date)
+        if (requestResults.code === KnotCode.SUCCESS && requestResults.data.activation_date)
         {
             requestResults.data.activation_date = new Date(requestResults.data.activation_date);
         }
