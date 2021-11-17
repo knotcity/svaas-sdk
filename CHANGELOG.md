@@ -1,3 +1,13 @@
+# 1.6.0 / 2021-11-17
+
+## :tada: Enhancements
+
+* Update Knot code list
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies
+
 # 1.5.0 / 2021-09-30
 
 ## :tada: Enhancements
