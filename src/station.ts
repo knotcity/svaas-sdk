@@ -1,4 +1,4 @@
-import type { RequestResultsWithData } from './lib';
+import type { RequestResultsWithData } from './lib.js';
 
 /**
  * Enum for the event station type.

@@ -1,3 +1,9 @@
+# 1.7.0 / 2022-03-03
+
+## :nut_and_bolt: Other
+
+* Add ESM compatibility
+
 # 1.6.0 / 2021-11-17
 
 ## :tada: Enhancements

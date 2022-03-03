@@ -1,14 +1,12 @@
-import axios = require('axios');
-import reqSigner = require('@knotcity/http-request-signer');
-import
-    {
-        AuthorizationHeaderComponents,
-        parseAuthorizationHeader,
-        verifyAuthorization
-    } from '@knotcity/http-request-signer';
+import * as axios from 'axios';
+import reqSigner, {
+    AuthorizationHeaderComponents,
+    parseAuthorizationHeader,
+    verifyAuthorization
+} from '@knotcity/http-request-signer';
 
-import { KnotCode } from './KnotCode';
-import { SVaaSError } from './SVaaSError';
+import { KnotCode } from './KnotCode.js';
+import { SVaaSError } from './SVaaSError.js';
 import type {
     BadgeReaderStatus,
     ConfirmLockAnswer,
@@ -17,15 +15,15 @@ import type {
     KnotStationEvent,
     StationConfigType,
     StationInformation
-} from './station';
+} from './station.js';
 import type {
     DisabledVehicles,
     EnabledVehicles,
     KnotVehicleEvent,
     VehicleConfig,
     VehicleInformation
-} from './vehicle';
-import { VehicleLightState, VehicleSoundType, VehicleSpeedMode } from './vehicle';
+} from './vehicle.js';
+import { VehicleLightState, VehicleSoundType, VehicleSpeedMode } from './vehicle.js';
 
 export type KnotEvent = KnotStationEvent | KnotVehicleEvent;
 
