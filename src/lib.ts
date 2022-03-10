@@ -248,7 +248,18 @@ export class KnotSVaaS
      */
     scanAllStationSpot(stationId: number): Promise<RequestResults>
     {
-        return this.makeStationRequest<RequestResults>('POST', 'v1', 'refresh', stationId);
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'refresh', stationId, {});
+    }
+
+    /**
+     * Request a station to scan the vehicle in the specified spot. The station will re-send the locked event if there is a vehicle inside the spot.
+     * @param {number} stationId - The identifier of the station.
+     * @param {number} spotId - The identifier of the spot.
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1refresh/post
+     */
+    scanStationSpot(stationId: number, spotId: number): Promise<RequestResults>
+    {
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'refresh', stationId, { spot: spotId });
     }
 
     /**

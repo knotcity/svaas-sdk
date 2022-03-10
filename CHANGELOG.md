@@ -1,8 +1,13 @@
-# 1.7.0 / 2022-03-03
+# 1.7.0 / 2022-03-10
+
+## :tada: Enhancements
+
+* Add new a function to scan a specified spot.
 
 ## :nut_and_bolt: Other
 
 * Add ESM compatibility
+* Upgrade dependencies
 
 # 1.6.0 / 2021-11-17
 
