@@ -6,7 +6,7 @@ import reqSigner, {
 } from '@knotcity/http-request-signer';
 
 import { KnotCode } from './KnotCode.js';
-import { SVaaSError } from './SVaaSError.js';
+import { SVaaSError, SVaaSRequestError } from './SVaaSError.js';
 import type {
     BadgeReaderStatus,
     ConfirmLockAnswer,
@@ -99,13 +99,13 @@ export class KnotSVaaS
     {
         if (typeof (options) !== 'object')
         {
-            throw new SVaaSError('Options should be an object');
+            throw new SVaaSError(`Options should be an object and not a ${typeof options}`);
         }
         if (options.stationsEndpoint !== undefined)
         {
             if (typeof options.stationsEndpoint !== 'string')
             {
-                throw new SVaaSError('The given stations endpoint should be a string');
+                throw new SVaaSError(`The given stations endpoint should be a string and not a ${typeof options.stationsEndpoint}`);
             }
             if (options.stationsEndpoint.length < 3)
             {
@@ -120,7 +120,7 @@ export class KnotSVaaS
         {
             if (typeof options.vehiclesEndpoint !== 'string')
             {
-                throw new SVaaSError('The given vehicles endpoint should be a string');
+                throw new SVaaSError(`The given vehicles endpoint should be a string and not a ${typeof options.vehiclesEndpoint}`);
             }
             if (options.vehiclesEndpoint.length < 3)
             {
@@ -133,11 +133,11 @@ export class KnotSVaaS
         }
         if (typeof options.keyId !== 'string')
         {
-            throw new SVaaSError('The given keyId should be a string');
+            throw new SVaaSError(`The given keyId should be a string and not a ${typeof options.keyId}`);
         }
         if (typeof options.privateKey !== 'string')
         {
-            throw new SVaaSError('The given privateKey should be a string');
+            throw new SVaaSError(`The given privateKey should be a string and not a ${typeof options.privateKey}`);
         }
         if (!options.axiosRequestConfig)
         {
@@ -232,7 +232,7 @@ export class KnotSVaaS
         }
         if (ignoreVehicleResponse !== undefined && typeof ignoreVehicleResponse !== 'boolean')
         {
-            throw new SVaaSError('Ignore vehicle response should be a boolean or undefined');
+            throw new SVaaSError(`Ignore vehicle response should be a boolean or undefined and not a ${typeof ignoreVehicleResponse}`);
         }
         return this.makeStationRequest<RequestResults>('POST', 'v1', 'unlock', stationId, {
             spot: spotId,
@@ -447,11 +447,11 @@ export class KnotSVaaS
         }
         if (config.cruiseControl !== undefined && typeof config.cruiseControl !== 'boolean')
         {
-            throw new SVaaSError('Cruise control should be a boolean or undefined');
+            throw new SVaaSError(`Cruise control should be a boolean or undefined and not a ${config.cruiseControl}`);
         }
         if (config.buttonSwitchSpeedMode !== undefined && typeof config.buttonSwitchSpeedMode !== 'boolean')
         {
-            throw new SVaaSError('Button switch speed mode should be a boolean or undefined');
+            throw new SVaaSError(`Button switch speed mode should be a boolean or undefined and not a ${config.buttonSwitchSpeedMode}`);
         }
         return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'config', vehicleId, config);
     }
@@ -644,7 +644,7 @@ export class KnotSVaaS
 
         if (results.data.code === undefined)
         {
-            throw new SVaaSError(`Request return an error: ${JSON.stringify(results.data)}`);
+            throw new SVaaSRequestError(`Request return an error: ${JSON.stringify(results.data)}`, url, data);
         }
         return results.data as T;
     }

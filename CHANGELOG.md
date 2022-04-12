@@ -1,3 +1,9 @@
+# 1.8.0 / 2022-04-12
+
+## :tada: Enhancements
+
+* Add error details.
+
 # 1.7.0 / 2022-03-10
 
 ## :tada: Enhancements
