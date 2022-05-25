@@ -636,7 +636,7 @@ export class KnotSVaaS
      */
     private async makeRequest<T>(method: axios.Method, url: string, data?: any)
     {
-        const results = await this.#ax(Object.assign(this.#options.axiosRequestConfig, {
+        const results = await this.#ax(Object.assign(this.#options.axiosRequestConfig ?? {}, {
             method,
             data,
             url
