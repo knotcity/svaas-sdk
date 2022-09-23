@@ -1,3 +1,9 @@
+# 1.8.1 / 2022-09-23
+
+## :tada: Enhancements
+
+* Add VEHICLE_IS_BUSY code.
+
 # 1.8.0 / 2022-04-12
 
 ## :tada: Enhancements
