@@ -23,7 +23,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@knotcity/http-request-signer": "0.3.3",
+    "@knotcity/http-request-signer": "0.4.0",
     "axios": "0.27.2"
   },
   "devDependencies": {
