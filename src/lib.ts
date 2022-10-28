@@ -113,7 +113,7 @@ export class KnotSVaaS
             }
             if (options.stationsEndpoint.endsWith('/'))
             {
-                options.stationsEndpoint = options.stationsEndpoint.substr(0, options.stationsEndpoint.length - 1);
+                options.stationsEndpoint = options.stationsEndpoint.substring(0, options.stationsEndpoint.length - 1);
             }
         }
         if (options.vehiclesEndpoint !== undefined)
@@ -128,7 +128,7 @@ export class KnotSVaaS
             }
             if (options.vehiclesEndpoint.endsWith('/'))
             {
-                options.vehiclesEndpoint = options.vehiclesEndpoint.substr(0, options.vehiclesEndpoint.length - 1);
+                options.vehiclesEndpoint = options.vehiclesEndpoint.substring(0, options.vehiclesEndpoint.length - 1);
             }
         }
         if (typeof options.keyId !== 'string')
