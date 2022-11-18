@@ -157,7 +157,7 @@ export class KnotSVaaS
             {
                 const url = c.url ? new URL(c.url) : undefined;
                 c.headers['Authorization'] = reqSigner.generateAuthorization({
-                    headers: c.headers,
+                    headers: c.headers as any,
                     method: c.method || 'POST',
                     path: url?.href.split(url.origin)[1] || '/'
                 }, {
