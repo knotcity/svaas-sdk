@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@knotcity/http-request-signer": "0.4.0",
-    "axios": "1.2.0"
+    "axios": "1.2.1"
   },
   "devDependencies": {
     "@types/node": "16.18.6",
