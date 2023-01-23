@@ -69,7 +69,7 @@ interface KnotSVaaSOptions
     /**
      * Axios' configuration.
      */
-    axiosRequestConfig?: axios.AxiosRequestConfig;
+    axiosRequestConfig?: axios.RawAxiosRequestConfig;
 }
 
 /**
