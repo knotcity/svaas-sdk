@@ -1,3 +1,9 @@
+# 1.8.2 / 2023-01-23
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies
+
 # 1.8.1 / 2022-09-23
 
 ## :tada: Enhancements
