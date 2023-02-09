@@ -1,3 +1,13 @@
+# 1.9.0 / 2023-02-09
+
+## :tada: Enhancements
+
+* Add types for station fault and alert
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies
+
 # 1.8.2 / 2023-01-23
 
 ## :nut_and_bolt: Other

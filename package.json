@@ -1,6 +1,6 @@
 {
   "name": "@knotcity/svaas-sdk",
-  "version": "1.8.2",
+  "version": "1.9.0",
   "description": "Knot Stations and Vehicles As A Service SDK",
   "repository": {
     "type": "git",
