@@ -232,3 +232,36 @@ export type DisabledStations = RequestResultsWithData<DisabledStationsInterface[
  * Station configuration types.
  */
 export type StationConfigType = 'volume' | 'alarm-threshold';
+
+/**
+ * Enum for the station alerts code.
+ * @readonly
+ * @enum {number}
+ */
+export enum StationAlertCode {
+    SHAKE = 0,
+    POWER_CUT = 1,
+    HIGH_TEMP = 2,
+}
+
+/**
+ * Enum for the station fault (and station alert) status.
+ * @readonly
+ * @enum {string}
+ */
+export enum StationFaultStatus {
+    APPEARING = 'appearing',
+    DISAPPEARED = 'disappeared',
+}
+
+/**
+ * Enum for the station faults code.
+ * @readonly
+ * @enum {number}
+ */
+export enum StationFaultCode {
+    COMMUNICATION_FAULT = 0,
+    CHARGE_FAULT = 1,
+    ABNORMAL_LOW_VOLTAGE = 2,
+    ABNORMAL_HIGH_VOLTAGE = 3
+}

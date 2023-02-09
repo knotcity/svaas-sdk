@@ -173,9 +173,9 @@ export type DisabledVehicles = RequestResultsWithData<DisabledVehiclesInterface[
  * Station configuration type.
  */
 export type VehicleConfig = {
-    lowSpeedLimit?: number; 
-    mediumSpeedLimit?: number; 
-    highSpeedLimit?: number; 
+    lowSpeedLimit?: number;
+    mediumSpeedLimit?: number;
+    highSpeedLimit?: number;
     cruiseControl?: boolean;
     buttonSwitchSpeedMode?: boolean;
 };
@@ -187,7 +187,7 @@ export type VehicleConfig = {
  */
 export enum VehicleAlertsCode {
     ILLEGAL_MOVING = 1,
-    VEHICLE_DOWN= 2,
+    VEHICLE_DOWN = 2,
     ILLEGAL_DISMANTLING = 3,
     VEHICLE_WAS_LIFTED_UP = 4,
     // Other
