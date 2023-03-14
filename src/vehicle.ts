@@ -131,7 +131,7 @@ export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | Locat
 interface DisabledVehiclesInterface
 {
     vehicle_id: number;
-    imei: string;
+    imei: string | null;
 }
 /**
  * Vehicle information interface
@@ -144,7 +144,7 @@ interface VehicleInformationInterface extends DisabledVehiclesInterface
     activation_date: Date | null;
     model_type: string;
     manufacturer: string;
-    imei: string;
+    imei: string | null;
     online: boolean | null;
     locked: boolean | null;
 }
@@ -185,7 +185,8 @@ export type VehicleConfig = {
  * @readonly
  * @enum {number}
  */
-export enum VehicleAlertsCode {
+export enum VehicleAlertsCode
+{
     ILLEGAL_MOVING = 1,
     VEHICLE_DOWN = 2,
     ILLEGAL_DISMANTLING = 3,
@@ -199,7 +200,8 @@ export enum VehicleAlertsCode {
  * @readonly
  * @enum {string}
  */
-export enum VehicleFaultStatus {
+export enum VehicleFaultStatus
+{
     APPEARING = 'appearing',
     DISAPPEARED = 'disappeared',
     UNKNOWN = 'unknown',  // Contact Knot Technical Support if you receive this fault status
@@ -210,7 +212,8 @@ export enum VehicleFaultStatus {
  * @readonly
  * @enum {number}
  */
-export enum VehicleFaultsCode {
+export enum VehicleFaultsCode
+{
     // Global faults
     CONTROL_PANEL_AND_MAIN_CONTROL_COMMUNICATION = 100,
     ACCELERATOR_SENSOR = 101,
