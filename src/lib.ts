@@ -491,6 +491,19 @@ export class KnotSVaaS
     }
 
     /**
+     * Request a vehicle to change the throttle mode.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @param {boolean} throttleEnabled - State of throttle.
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config~1throttle/post
+     */
+    changeVehicleThrottleMode(vehicleId: number, throttleEnabled: boolean): Promise<RequestResults>
+    {
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'config/throttle', vehicleId, {
+            enabled: throttleEnabled
+        });
+    }
+
+    /**
      * Get a vehicle's information.
      * @param {number} vehicleId - The identifier of the vehicle.
      * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}/get
