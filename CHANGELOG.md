@@ -1,3 +1,13 @@
+# 1.10.0 / 2023-04-17
+
+## :tada: Enhancements
+
+* Add new a function to enable or disable the vehicle throttle.
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies
+
 # 1.9.0 / 2023-02-09
 
 ## :tada: Enhancements
