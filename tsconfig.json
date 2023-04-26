@@ -13,7 +13,7 @@
           "node_modules/*"
         ]
       },
-      "importsNotUsedAsValues": "error"
+      "verbatimModuleSyntax": false // TODO: when the module is full ESM change this to true
     },
     "include": [
       "src/**/*"
