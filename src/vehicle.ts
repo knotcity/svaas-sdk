@@ -7,13 +7,13 @@ import type { RequestResultsWithData } from './lib.js';
  */
 export enum EventVehicleType
 {
-    CONNECTED = 'connected',
-    DISCONNECTED = 'disconnected',
     UNLOCKED = 'unlocked',
     LOCKED = 'locked',
     LOCATION = 'location',
     STATUS = 'status',
-    LOCK_FAILED = 'lock-failed'
+    LOCK_FAILED = 'lock-failed',
+    ALERT = 'alert',
+    FAULT = 'fault'
 }
 
 /**
@@ -89,10 +89,12 @@ export type LocationVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.LOCATION;
     data: {
         status: 'valid';
+        time: number;
         latitude: number;
         longitude: number;
     } | {
         status: 'invalid';
+        time: number;
     };
 };
 
@@ -103,9 +105,11 @@ export type StatusVehicleEvent = EventVehicleBase & {
     event: EventVehicleType.STATUS;
     data: {
         online: boolean;
-        locked: boolean;
-        batteryPercentage: number;
-        odometer: number;
+        locked: boolean | undefined;
+        batteryPercentage: number | undefined;
+        odometer: number | undefined;
+        speed: number | undefined;
+        charging: boolean | undefined;
     };
 };
 
@@ -120,9 +124,32 @@ export type LockFailedVehicleEvent = EventVehicleBase & {
 };
 
 /**
+ * Type for the vehicle alert event.
+ */
+export type AlertVehicleEvent = EventVehicleBase & {
+    event: EventVehicleType.ALERT;
+    data: {
+        code: number;
+        alertStatus: 'appearing' | 'disappeared' | 'unknown';
+        reason: string | undefined;
+    };
+};
+
+/**
+ * Type for the vehicle fault event.
+ */
+export type FaultVehicleEvent = EventVehicleBase & {
+    event: EventVehicleType.FAULT;
+    data: {
+        code: number;
+        faultStatus: 'appearing' | 'disappeared' | 'unknown';
+    };
+};
+
+/**
  * Type grouping all vehicle events.
  */
-export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | LocationVehicleEvent | StatusVehicleEvent | LockFailedVehicleEvent;
+export type KnotVehicleEvent = UnlockedVehicleEvent | LockedVehicleEvent | LocationVehicleEvent | StatusVehicleEvent | LockFailedVehicleEvent | AlertVehicleEvent | FaultVehicleEvent;
 
 /**
  * Disabled vehicles interface

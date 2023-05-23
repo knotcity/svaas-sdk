@@ -341,6 +341,28 @@ export class KnotSVaaS
     {
         return this.makeStationRequest<DisabledStations>('GET', 'v1', 'disabled');
     }
+
+    /**
+     * Update a station geolocation.
+     * @param {number} stationId - The identifier of the station.
+     * @param {number} latitude - The latitude of the station.
+     * @param {number} longitude - The longitude of the station.
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1location/post
+     */
+    updateStationGeolocation(stationId: number, latitude: number, longitude: number)
+    {
+        if (typeof latitude !== 'number')
+        {
+            throw new SVaaSError('Latitude should be a number');
+        }
+        if (typeof longitude !== 'number')
+        {
+            throw new SVaaSError('Longitude should be a number');
+        }
+        return this.makeStationRequest<RequestResults>('POST', 'v1', 'location', stationId, {
+            latitude, longitude
+        });
+    }
     //#endregion Station commands
 
     //#region Vehicle commands
@@ -348,16 +370,22 @@ export class KnotSVaaS
      * Unlock a vehicle. This will also unlock the spot on which the vehicle is (if it is on a spot).
      * @param {number} vehicleId - The identifier of the vehicle.
      * @param {number} unlockId - An identifier to track this unlock request. This will be sent back in the unlocked event.
+     * @param {boolean?} ignoreStationStatus - Ignore the station status if the vehicle is in a spot. Useful for maintenance because it allows unlocking a vehicle when it has been manually removed from a disconnected station.
      * @description https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1unlock/post
      */
-    unlockVehicle(vehicleId: number, unlockId: number): Promise<RequestResults>
+    unlockVehicle(vehicleId: number, unlockId: number, ignoreStationStatus?: boolean): Promise<RequestResults>
     {
         if (!Number.isInteger(unlockId) || unlockId < 1)
         {
             throw new SVaaSError('Unlock ID should be an integer greater or equal to 1');
         }
+        if (ignoreStationStatus !== undefined && typeof ignoreStationStatus !== 'boolean')
+        {
+            throw new SVaaSError('ignoreStationStatus should be a boolean or undefined');
+        }
         return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'unlock', vehicleId, {
-            unlock: unlockId
+            unlock: unlockId,
+            ignore_station_status: ignoreStationStatus
         });
     }
 
@@ -498,6 +526,10 @@ export class KnotSVaaS
      */
     changeVehicleThrottleMode(vehicleId: number, throttleEnabled: boolean): Promise<RequestResults>
     {
+        if (typeof throttleEnabled !== 'boolean')
+        {
+            throw new SVaaSError('Throttle enabled should be a boolean');
+        }
         return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'config/throttle', vehicleId, {
             enabled: throttleEnabled
         });
