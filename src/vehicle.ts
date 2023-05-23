@@ -92,6 +92,8 @@ export type LocationVehicleEvent = EventVehicleBase & {
         time: number;
         latitude: number;
         longitude: number;
+        accuracy: number;
+        altitude: number | undefined;
     } | {
         status: 'invalid';
         time: number;
@@ -110,6 +112,7 @@ export type StatusVehicleEvent = EventVehicleBase & {
         odometer: number | undefined;
         speed: number | undefined;
         charging: boolean | undefined;
+        remainingRange: number | undefined;
     };
 };
 
