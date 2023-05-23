@@ -1,3 +1,15 @@
+# 1.11.0 / 2023-05-23
+
+## :tada: Enhancements
+
+* Update event type to match what is currently in use.
+* Add function to update a station geolocation.
+* Add an option to ignore the station response when unlocking a vehicle.
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies.
+
 # 1.10.0 / 2023-04-17
 
 ## :tada: Enhancements
@@ -6,7 +18,7 @@
 
 ## :nut_and_bolt: Other
 
-* Upgrade dependencies
+* Upgrade dependencies.
 
 # 1.9.0 / 2023-02-09
 
