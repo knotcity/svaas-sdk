@@ -1,4 +1,4 @@
-image: "node:erbium-alpine"
+image: "node:hydrogen-alpine"
 
 stages:
   - test
