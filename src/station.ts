@@ -320,6 +320,7 @@ export enum StationAlertCode
     SHAKE = 0,
     POWER_CUT = 1,
     HIGH_TEMP = 2,
+    INCORRECT_LOCK = 3,
 }
 
 /**
