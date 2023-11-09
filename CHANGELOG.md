@@ -3,6 +3,8 @@
 ## :tada: Enhancements
 
 * Add battery level to vehicle information
+* Add INCORRECT_LOCK in StationAlertCode
+* Add vehicle fault code: BRAKE_SENSOR
 
 ## :nut_and_bolt: Other
 
