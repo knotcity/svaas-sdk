@@ -1,3 +1,13 @@
+# 1.11.1 / 2023-11-09
+
+## :tada: Enhancements
+
+* Add battery level to vehicle information
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies.
+
 # 1.11.0 / 2023-05-23
 
 ## :tada: Enhancements
