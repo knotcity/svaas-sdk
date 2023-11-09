@@ -177,6 +177,7 @@ interface VehicleInformationInterface extends DisabledVehiclesInterface
     imei: string | null;
     online: boolean | null;
     locked: boolean | null;
+    battery: number | null;
 }
 /**
  * Enabled vehicles interface
