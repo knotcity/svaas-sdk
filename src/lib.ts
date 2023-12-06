@@ -281,12 +281,14 @@ export class KnotSVaaS
      * Send a feedback to the badge reader of a station. This is used as a response to the badge event to show a success or failure to the user.
      * @param {number} stationId - The identifier of the station.
      * @param {BadgeReaderStatus} status - Type of feedback.
+     * @param {number} spotId - The identifier of the spot. Required for station v6, unused for station v5.
      * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1badge/post
      */
-    badgeReaderFeedback(stationId: number, status: BadgeReaderStatus): Promise<RequestResults>
+    badgeReaderFeedback(stationId: number, status: BadgeReaderStatus, spotId?: number): Promise<RequestResults>
     {
         return this.makeStationRequest<RequestResults>('POST', 'v1', 'badge', stationId, {
-            status
+            status,
+            spot: spotId
         });
     }
 
