@@ -199,6 +199,7 @@ export type BadgeRFIDStationEvent = EventStationBase & {
     event: EventStationType.BADGE_RFID;
     data: {
         badge_id: string;
+        spot?: number; // Absent in v5 stations, present in v6 stations.
     };
 };
 
