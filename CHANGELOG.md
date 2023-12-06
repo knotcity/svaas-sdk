@@ -1,3 +1,13 @@
+# 1.12.0 / 2023-12-06
+
+## :tada: Enhancements
+
+* Add spotId to badge feedback for station v6
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies.
+
 # 1.11.1 / 2023-11-09
 
 ## :tada: Enhancements
