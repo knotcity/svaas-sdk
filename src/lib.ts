@@ -319,7 +319,7 @@ export class KnotSVaaS
      *
      * @param {number} stationId - The ID of the station.
      * @param {string} label - The new label for the station.
-     * @param {string} [group] - The new group for the station.
+     * @param {string} group - The new group for the station.
      * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1label/put
      */
     changeStationLabelAndGroup(stationId: number, label: string, group: string): Promise<RequestResults>
@@ -562,7 +562,7 @@ export class KnotSVaaS
      *
      * @param {number} vehicleId - The ID of the vehicle.
      * @param {string} label - The new label for the vehicle.
-     * @param {string} [group] - The new group for the vehicle.
+     * @param {string} group - The new group for the vehicle.
      * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1label/put
      */
     changeVehicleLabelAndGroup(vehicleId: number, label: string, group: string): Promise<RequestResults>
