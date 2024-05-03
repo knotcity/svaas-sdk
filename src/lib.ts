@@ -303,7 +303,7 @@ export class KnotSVaaS
     }
 
     /**
-     * Changes the label of the station.
+     * Changes the label and group of a station.
      *
      * @param {number} stationId - The ID of the station.
      * @param {string} label - The new label for the station.
@@ -534,7 +534,7 @@ export class KnotSVaaS
     }
 
     /**
-     * Changes the label of a vehicle.
+     * Changes the label and group of a vehicle.
      *
      * @param {number} vehicleId - The ID of the vehicle.
      * @param {string} label - The new label for the vehicle.
