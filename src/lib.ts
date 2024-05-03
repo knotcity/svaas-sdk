@@ -303,14 +303,26 @@ export class KnotSVaaS
     }
 
     /**
+     * Changes the label of a station.
+     *
+     * @param {number} stationId - The ID of the station.
+     * @param {string} label - The new label for the station.
+     * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1label/put
+     */
+    changeStationLabel(stationId: number, label: string): Promise<RequestResults>
+    {
+        return this.makeStationRequest<RequestResults>('PUT', 'v1', 'label', stationId, { label });
+    }
+
+    /**
      * Changes the label and group of a station.
      *
      * @param {number} stationId - The ID of the station.
      * @param {string} label - The new label for the station.
-     * @param {string?} [group] - The new group for the station (optional).
+     * @param {string} [group] - The new group for the station.
      * @documentation https://doc.knotcity.io/svaas/station/request/swagger.html#/paths/~1v1~1{stationId}~1label/put
      */
-    changeStationLabel(stationId: number, label: string, group?: string): Promise<RequestResults>
+    changeStationLabelAndGroup(stationId: number, label: string, group: string): Promise<RequestResults>
     {
         return this.makeStationRequest<RequestResults>('PUT', 'v1', 'label', stationId, { label, group });
     }
@@ -534,14 +546,26 @@ export class KnotSVaaS
     }
 
     /**
+     * Changes the label of a vehicle.
+     *
+     * @param {number} vehicleId - The ID of the vehicle.
+     * @param {string} label - The new label for the vehicle.
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1label/put
+     */
+    changeVehicleLabel(vehicleId: number, label: string): Promise<RequestResults>
+    {
+        return this.makeVehicleRequest<RequestResults>('PUT', 'v1', 'label', vehicleId, { label });
+    }
+
+    /**
      * Changes the label and group of a vehicle.
      *
      * @param {number} vehicleId - The ID of the vehicle.
      * @param {string} label - The new label for the vehicle.
-     * @param {string?} [group] - The new group for the vehicle (optional).
+     * @param {string} [group] - The new group for the vehicle.
      * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1label/put
      */
-    changeVehicleLabel(vehicleId: number, label: string, group?: string): Promise<RequestResults>
+    changeVehicleLabelAndGroup(vehicleId: number, label: string, group: string): Promise<RequestResults>
     {
         return this.makeVehicleRequest<RequestResults>('PUT', 'v1', 'label', vehicleId, { label, group });
     }
