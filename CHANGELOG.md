@@ -1,3 +1,14 @@
+# 1.13.0 / 2025-05-12
+
+## :tada: Enhancements
+
+* **BREAKING CHANGE** Remove deprecated shake, critical-energy, high-temp & spot defect station events
+* Add new function to define label & group
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies.
+
 # 1.12.0 / 2023-12-06
 
 ## :tada: Enhancements

@@ -19,15 +19,6 @@ export enum EventStationType
     CONFIG_FAILED = 'config-failed',
     ALERT = 'alert',
     FAULT = 'fault',
-
-    /** @deprecated use ALERT event instead */
-    SHAKE = 'shake',
-    /** @deprecated use ALERT event instead */
-    ENERGY_CRITICAL = 'critical-energy',
-    /** @deprecated use ALERT event instead */
-    HIGH_TEMP = 'high-temp',
-    /** @deprecated use ALERT event instead */
-    SPOT_DEFECT = 'spot-defect',
 }
 
 /**
@@ -88,6 +79,7 @@ export type UnlockedStationEvent = EventStationBase & {
     data: {
         spot: number;
         unlock: number;
+        vehicle?: number;
     };
 };
 
@@ -101,7 +93,7 @@ export type LockedStationEvent = {
         vehicle: number;
         cache_accepted: boolean;
         time: number;
-        identifiedByLocation: boolean | undefined;
+        identifiedByLocation?: boolean;
     };
 };
 
@@ -110,6 +102,16 @@ export type LockedStationEvent = {
  */
 export type BootStationEvent = EventStationBase & {
     event: EventStationType.BOOT;
+    data: {
+        mainboard: {
+            firmware_version: string;
+            board_revision: string;
+        };
+        spots: Array<{
+            firmware_version: string;
+            board_revision: string;
+        }>;
+    };
 };
 
 /**
@@ -141,54 +143,12 @@ export type StateStationEvent = EventStationBase & {
 };
 
 /**
- * Type for the station shake event.
- * @deprecated use ALERT event instead
- */
-export type ShakeStationEvent = EventStationBase & {
-    event: EventStationType.SHAKE;
-};
-
-/**
- * Type for the high station temperature event.
- * @deprecated use ALERT event instead
- */
-export type HighTempStationEvent = EventStationBase & {
-    event: EventStationType.HIGH_TEMP;
-    data: {
-        temperature: number;
-        critical: boolean;
-    };
-};
-
-/**
- * Type for the station critical energy event.
- * @deprecated use ALERT event instead
- */
-export type CriticalEnergyStationEvent = EventStationBase & {
-    event: EventStationType.ENERGY_CRITICAL;
-};
-
-/**
  * Type for the station unexpected unlock event.
  */
 export type UnexpectedUnlockStationEvent = EventStationBase & {
     event: EventStationType.UNEXPECTED_UNLOCK;
     data: {
         spot: number;
-    };
-};
-
-/**
- * Type for the station spot defect event.
- * @deprecated use ALERT event instead
- */
-export type SpotDefectStationEvent = EventStationBase & {
-    event: EventStationType.SPOT_DEFECT;
-    data: {
-        spot: number;
-        vehicle: number;
-        vehicle_voltage: number;
-        lock_status: number;
     };
 };
 
@@ -253,7 +213,7 @@ export type StationFaultEvent = EventStationBase & {
 /**
  * Type grouping all station events.
  */
-export type KnotStationEvent = ConnectedStationEvent | DisconnectedStationEvent | UnlockedStationEvent | LockedStationEvent | BootStationEvent | StateStationEvent | ShakeStationEvent | HighTempStationEvent | CriticalEnergyStationEvent | UnexpectedUnlockStationEvent | SpotDefectStationEvent | BadgeRFIDStationEvent | StationConfiguredEvent | StationConfigFailedEvent | StationAlertEvent | StationFaultEvent;
+export type KnotStationEvent = ConnectedStationEvent | DisconnectedStationEvent | UnlockedStationEvent | LockedStationEvent | BootStationEvent | StateStationEvent | UnexpectedUnlockStationEvent | BadgeRFIDStationEvent | StationConfiguredEvent | StationConfigFailedEvent | StationAlertEvent | StationFaultEvent;
 
 /**
 * Disabled stations interface
@@ -309,7 +269,7 @@ export type DisabledStations = RequestResultsWithData<DisabledStationsInterface[
 /**
  * Station configuration types.
  */
-export type StationConfigType = 'volume' | 'alarm-threshold';
+export type StationConfigType = 'volume' | 'alarm-threshold' | 'spot-count' | 'charge-strategy';
 
 /**
  * Enum for the station alerts code.
