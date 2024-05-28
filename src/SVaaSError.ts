@@ -24,6 +24,6 @@ export class SVaaSRequestError extends SVaaSError
      * @param {any} data -
      */
     constructor(message: string, url: string, data: any) {
-        super(`${message}: ${url} ${data}`);
+        super(`${message}: ${url} ${JSON.stringify(data)}`);
     }
 }
