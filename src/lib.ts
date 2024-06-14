@@ -488,17 +488,17 @@ export class KnotSVaaS
      */
     configureVehicle(vehicleId: number, config: VehicleConfig): Promise<RequestResults>
     {
-        if (config.lowSpeedLimit !== undefined && (!Number.isInteger(config.lowSpeedLimit) || config.lowSpeedLimit < 6 || config.lowSpeedLimit > 25))
+        if (config.lowSpeedLimit !== undefined && (!Number.isInteger(config.lowSpeedLimit) || config.lowSpeedLimit < 6 || config.lowSpeedLimit > 30))
         {
-            throw new SVaaSError('Low speed limit should be an integer between 6 and 25 or undefined');
+            throw new SVaaSError('Low speed limit should be an integer between 6 and 30 or undefined');
         }
-        if (config.mediumSpeedLimit !== undefined && (!Number.isInteger(config.mediumSpeedLimit) || config.mediumSpeedLimit < 6 || config.mediumSpeedLimit > 25))
+        if (config.mediumSpeedLimit !== undefined && (!Number.isInteger(config.mediumSpeedLimit) || config.mediumSpeedLimit < 6 || config.mediumSpeedLimit > 30))
         {
-            throw new SVaaSError('Medium speed limit should be an integer between 6 and 25 or undefined');
+            throw new SVaaSError('Medium speed limit should be an integer between 6 and 30 or undefined');
         }
-        if (config.highSpeedLimit !== undefined && (!Number.isInteger(config.highSpeedLimit) || config.highSpeedLimit < 6 || config.highSpeedLimit > 25))
+        if (config.highSpeedLimit !== undefined && (!Number.isInteger(config.highSpeedLimit) || config.highSpeedLimit < 6 || config.highSpeedLimit > 30))
         {
-            throw new SVaaSError('High speed limit should be an integer between 6 and 25 or undefined');
+            throw new SVaaSError('High speed limit should be an integer between 6 and 30 or undefined');
         }
         if (config.cruiseControl !== undefined && typeof config.cruiseControl !== 'boolean')
         {
