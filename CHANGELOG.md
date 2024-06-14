@@ -1,3 +1,9 @@
+# 1.14.0 / 2024-06-14
+
+## :tada: Enhancements
+
+* Updated `configureVehicle` function to allow speeds up to 30km/h
+ 
 # 1.13.0 / 2025-05-12
 
 ## :tada: Enhancements
