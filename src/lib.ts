@@ -454,10 +454,21 @@ export class KnotSVaaS
      * Send request to open the battery cover of the vehicle.
      * @param {number} vehicleId - The identifier of the vehicle.
      * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1battery-cover/post
+     * @deprecated Use `unlockVehicleBattery` method.
      */
     openVehicleBatteryCover(vehicleId: number): Promise<RequestResults>
     {
         return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'battery-cover', vehicleId);
+    }
+
+    /**
+     * Send request to unlock a vehicle's battery.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1battery-unlock/post
+     */
+    unlockVehicleBattery(vehicleId: number): Promise<RequestResults>
+    {
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'battery-unlock', vehicleId);
     }
 
     /**
