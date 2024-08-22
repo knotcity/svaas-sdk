@@ -311,6 +311,14 @@ export class KnotSVaaS
      */
     changeStationLabel(stationId: number, label: string): Promise<RequestResults>
     {
+        if (typeof label !== 'string')
+        {
+            throw new SVaaSError(`The given label should be a string and not a ${typeof label}`);
+        }
+        if (label.length > 50)
+        {
+            throw new SVaaSError('The given label exceeds the authorised size (50)');
+        }
         return this.makeStationRequest<RequestResults>('PUT', 'v1', 'label', stationId, { label });
     }
 
@@ -324,6 +332,22 @@ export class KnotSVaaS
      */
     changeStationLabelAndGroup(stationId: number, label: string, group: string): Promise<RequestResults>
     {
+        if (typeof label !== 'string')
+        {
+            throw new SVaaSError(`The given label should be a string and not a ${typeof label}`);
+        }
+        if (label.length > 50)
+        {
+            throw new SVaaSError('The given label exceeds the authorised size (50)');
+        }
+        if (typeof group !== 'string')
+        {
+            throw new SVaaSError(`The given group should be a string and not a ${typeof group}`);
+        }
+        if (group.length > 50)
+        {
+            throw new SVaaSError('The given group exceeds the authorised size (50)');
+        }
         return this.makeStationRequest<RequestResults>('PUT', 'v1', 'label', stationId, { label, group });
     }
 
