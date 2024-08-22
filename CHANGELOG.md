@@ -1,3 +1,9 @@
+# 1.14.1 / 2024-08-22
+
+## :bug: Fixes
+
+* Add security for max string size of label and group
+ 
 # 1.14.0 / 2024-06-14
 
 ## :tada: Enhancements
