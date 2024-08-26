@@ -97,7 +97,7 @@ export class KnotSVaaS
      */
     constructor(options: KnotSVaaSOptions)
     {
-        if (typeof (options) !== 'object')
+        if (typeof options !== 'object')
         {
             throw new SVaaSError(`Options should be an object and not a ${typeof options}`);
         }
@@ -153,12 +153,12 @@ export class KnotSVaaS
             c.headers['X-Api-Key'] = this.#options.keyId;
             c.headers['Content-Type'] = 'application/json';
             // Needs to be converted to Buffer before getting the length, otherwise special characters will be encoded on 2 bytes but the string length will still count 1, thus the body will be truncated to match the given length.
-            c.headers['Content-Length'] = (c.data ?  Buffer.from(JSON.stringify(c.data), 'utf-8').length : 0).toString();
+            c.headers['Content-Length'] = (c.data ? Buffer.from(JSON.stringify(c.data), 'utf-8').length : 0).toString();
             try
             {
                 const url = c.url ? new URL(c.url) : undefined;
                 c.headers['Authorization'] = reqSigner.generateAuthorization({
-                    headers: c.headers as any,
+                    headers: c.headers,
                     method: c.method || 'POST',
                     path: url?.href.split(url.origin)[1] || '/'
                 }, {
@@ -171,13 +171,15 @@ export class KnotSVaaS
             }
             catch (err)
             {
+                /* eslint-disable @typescript-eslint/no-unsafe-call */
                 throw new SVaaSError(`Generating the request signature failed: ${err.toString()}`);
+                /* eslint-enable @typescript-eslint/no-unsafe-call */
             }
             return c;
         });
     }
 
-    //#region Station commands
+    // #region Station commands
     /**
      * Request a station to reboot.
      * @param {number} stationId - The identifier of the station.
@@ -376,7 +378,7 @@ export class KnotSVaaS
         const requestResults = await this.makeStationRequest<EnabledStations>('GET', 'v1', 'enabled');
         if (requestResults.code === KnotCode.SUCCESS)
         {
-            requestResults.data.forEach((r: any) =>
+            requestResults.data.forEach(r =>
             {
                 r.activation_date = new Date(r.activation_date);
                 return r;
@@ -415,9 +417,9 @@ export class KnotSVaaS
             latitude, longitude
         });
     }
-    //#endregion Station commands
+    // #endregion Station commands
 
-    //#region Vehicle commands
+    // #region Vehicle commands
     /**
      * Unlock a vehicle. This will also unlock the spot on which the vehicle is (if it is on a spot).
      * @param {number} vehicleId - The identifier of the vehicle.
@@ -538,11 +540,13 @@ export class KnotSVaaS
         }
         if (config.cruiseControl !== undefined && typeof config.cruiseControl !== 'boolean')
         {
+            /* eslint-disable @typescript-eslint/restrict-template-expressions */
             throw new SVaaSError(`Cruise control should be a boolean or undefined and not a ${config.cruiseControl}`);
         }
         if (config.buttonSwitchSpeedMode !== undefined && typeof config.buttonSwitchSpeedMode !== 'boolean')
         {
             throw new SVaaSError(`Button switch speed mode should be a boolean or undefined and not a ${config.buttonSwitchSpeedMode}`);
+            /* eslint-enable @typescript-eslint/restrict-template-expressions */
         }
         return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'config', vehicleId, config);
     }
@@ -647,7 +651,7 @@ export class KnotSVaaS
         const requestResults = await this.makeVehicleRequest<EnabledVehicles>('GET', 'v1', 'enabled');
         if (requestResults.code === KnotCode.SUCCESS)
         {
-            requestResults.data.forEach((r: any) =>
+            requestResults.data.forEach(r =>
             {
                 r.activation_date = new Date(r.activation_date);
                 return r;
@@ -664,7 +668,7 @@ export class KnotSVaaS
     {
         return this.makeVehicleRequest<DisabledVehicles>('GET', 'v1', 'disabled');
     }
-    //#endregion Vehicle commands
+    // #endregion Vehicle commands
 
     // Signature validation
     /**
@@ -699,7 +703,7 @@ export class KnotSVaaS
                 path: event.path
             }, this.#options.knotPublicKey);
         }
-        catch (e)
+        catch
         {
             return false;
         }
@@ -775,7 +779,7 @@ export class KnotSVaaS
             url
         }));
 
-        if (results.data.code === undefined)
+        if (!('code' in results.data) || results.data.code === undefined)
         {
             throw new SVaaSRequestError(`Request return an error: ${JSON.stringify(results.data)}`, url, data);
         }

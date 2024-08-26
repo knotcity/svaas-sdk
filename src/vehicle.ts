@@ -58,7 +58,7 @@ export enum VehicleSpeedMode
 type EventVehicleBase = {
     event: EventVehicleType;
     vehicle: number;
-}
+};
 
 /**
  * Type for the vehicle unlocked event.

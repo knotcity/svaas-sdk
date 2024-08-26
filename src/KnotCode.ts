@@ -1,4 +1,5 @@
-export enum KnotCode {
+export enum KnotCode
+{
     SUCCESS = 0, // HTTP 200
     INVALID_STATION = 9, // HTTP 404
     INVALID_VEHICLE = 10, // HTTP 404

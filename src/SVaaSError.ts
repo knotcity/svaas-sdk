@@ -7,7 +7,8 @@ export class SVaaSError extends Error
      * Class constructor
      * @param {string} message - Error description.
      */
-    constructor(message: string) {
+    constructor(message: string)
+    {
         super(`[Knot SVaaS SDK] ${message}`);
     }
 }
@@ -23,7 +24,8 @@ export class SVaaSRequestError extends SVaaSError
      * @param {string} url -
      * @param {any} data -
      */
-    constructor(message: string, url: string, data: any) {
+    constructor(message: string, url: string, data: any)
+    {
         super(`${message}: ${url} ${JSON.stringify(data)}`);
     }
 }

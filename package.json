@@ -19,7 +19,7 @@
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:es": "tsc -p tsconfig.es.json",
     "build:types": "tsc -p tsconfig.types.json",
-    "lint": "eslint --ext ts src",
+    "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -28,9 +28,10 @@
   },
   "devDependencies": {
     "@types/node": "20.11.17",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
-    "eslint": "8.57.0",
-    "typescript": "5.5.4"
+    "@stylistic/eslint-plugin": "2.6.4",
+    "@eslint/js": "9.9.1",
+    "eslint": "9.9.1",
+    "typescript": "5.5.4",
+    "typescript-eslint": "8.2.0"
   }
 }

@@ -51,7 +51,7 @@ export enum BadgeReaderStatus
 type EventStationBase = {
     event: EventStationType;
     station: number;
-}
+};
 
 /**
  * Type for the station connected event.
