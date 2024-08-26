@@ -152,7 +152,8 @@ export class KnotSVaaS
             c.headers['X-Knot-Date'] = (+new Date()).toString();
             c.headers['X-Api-Key'] = this.#options.keyId;
             c.headers['Content-Type'] = 'application/json';
-            c.headers['Content-Length'] = (c.data ? JSON.stringify(c.data).length : 0).toString();
+            // Needs to be converted to Buffer before getting the length, otherwise special characters will be encoded on 2 bytes but the string length will still count 1, thus the body will be truncated to match the given length.
+            c.headers['Content-Length'] = (c.data ?  Buffer.from(JSON.stringify(c.data), 'utf-8').length : 0).toString();
             try
             {
                 const url = c.url ? new URL(c.url) : undefined;

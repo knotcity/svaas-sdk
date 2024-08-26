@@ -1,3 +1,13 @@
+# 1.14.2 / 2024-08-26
+
+## :bug: Fixes
+
+* Fix content length computation with unicode characters.
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies.
+
 # 1.14.1 / 2024-08-22
 
 ## :bug: Fixes
