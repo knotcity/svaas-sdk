@@ -27,7 +27,7 @@
     "axios": "1.7.7"
   },
   "devDependencies": {
-    "@types/node": "20.17.3",
+    "@types/node": "20.17.6",
     "@stylistic/eslint-plugin": "2.9.0",
     "@eslint/js": "9.13.0",
     "eslint": "9.14.0",
