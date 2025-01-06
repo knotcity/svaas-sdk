@@ -1,3 +1,13 @@
+# 1.14.4 / 2025-01-06
+
+## :bug: Fixes
+
+* Add missing station alert type in enum (LOCKER_STUCK) that can happen on V6 stations.
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies.
+
 # 1.14.3 / 2024-08-26
 
 ## :bug: Fixes

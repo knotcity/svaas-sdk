@@ -282,6 +282,7 @@ export enum StationAlertCode
     POWER_CUT = 1,
     HIGH_TEMP = 2,
     INCORRECT_LOCK = 3,
+    LOCKER_STUCK = 4,
 }
 
 /**
