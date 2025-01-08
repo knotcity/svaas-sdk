@@ -1,3 +1,10 @@
+
+# 1.14.5 / 2025-01-08
+
+## :tada: Enhancements
+
+* Add BLOCKED_FOR_SECURITY code in KnotCode enum
+
 # 1.14.4 / 2025-01-06
 
 ## :bug: Fixes
@@ -23,13 +30,13 @@
 ## :bug: Fixes
 
 * Add security for max string size of label and group
- 
+
 # 1.14.0 / 2024-06-14
 
 ## :tada: Enhancements
 
 * Updated `configureVehicle` function to allow speeds up to 30km/h
- 
+
 # 1.13.0 / 2025-05-12
 
 ## :tada: Enhancements
