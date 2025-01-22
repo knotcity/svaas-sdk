@@ -224,6 +224,9 @@ interface DisabledStationsInterface
     station_id: number;
     spots_count: number;
 }
+
+export type StationEnergySource = 'grid' | 'battery' | 'solar+battery';
+
 /**
  * Station information interface
  * @interface
@@ -233,7 +236,15 @@ interface StationInformationInterface extends DisabledStationsInterface
     station_id: number;
     model_name: string;
     manufacturer: string;
+    /**
+     * @deprecated use energy_source instead
+     */
     model_type: string;
+    energy_source: StationEnergySource;
+    /**
+     * When this is true, this means that there is one badge reader per spot, so the response to a badge read should specify the spot id.
+     */
+    badge_reader_per_spot: boolean;
     activation_date: Date | null;
     online: boolean;
     spots_count: number;

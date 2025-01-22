@@ -163,6 +163,10 @@ interface DisabledVehiclesInterface
     vehicle_id: number;
     imei: string | null;
 }
+
+export type VehicleModelKind = 'scooter' | 'bike' | 'sleeve';
+export type VehicleEnergySource= 'battery' | 'solar+battery' | 'muscular';
+
 /**
  * Vehicle information interface
  * @interface
@@ -172,7 +176,18 @@ interface VehicleInformationInterface extends DisabledVehiclesInterface
     vehicle_id: number;
     model_name: string;
     activation_date: Date | null;
+    /**
+     * @deprecated use model_kind, has_iot and has_sleeve instead
+     */
     model_type: string;
+    model_kind: VehicleModelKind;
+    energy_source: VehicleEnergySource;
+    has_iot: boolean;
+    has_sleeve: boolean;
+    /**
+     * If this is false, lock commands will fail as the vehicle cannot be locked remotely (no iot or locker requiring manual action).
+     */
+    can_be_remotely_locked: boolean;
     manufacturer: string;
     imei: string | null;
     online: boolean | null;
