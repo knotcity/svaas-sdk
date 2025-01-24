@@ -109,6 +109,7 @@ export type StatusVehicleEvent = EventVehicleBase & {
         online: boolean;
         locked: boolean | undefined;
         batteryPercentage: number | undefined;
+        iotBatteryPercentage: number | undefined;
         odometer: number | undefined;
         speed: number | undefined;
         charging: boolean | undefined;
@@ -193,6 +194,7 @@ interface VehicleInformationInterface extends DisabledVehiclesInterface
     online: boolean | null;
     locked: boolean | null;
     battery: number | null;
+    iot_battery_percentage: number | null;
 }
 /**
  * Enabled vehicles interface
