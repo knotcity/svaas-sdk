@@ -1,3 +1,14 @@
+# 1.15.0 / 2025-01-27
+
+## :tada: Enhancements
+
+* **BREAKING CHANGE** `model_type` is now deprecated on stations and vehicles. Replaced by the following:
+* Stations: add `energy_source` and `badge_reader_per_spot` properties on stations info.
+* Vehicles: add `model_kind`, `energy_source`, `has_iot`, `has_sleeve` and `can_be_remotely_locked` properties on vehicles info.
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies.
 
 # 1.14.5 / 2025-01-08
 
