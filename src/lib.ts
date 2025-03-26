@@ -683,7 +683,7 @@ export class KnotSVaaS
      * Request a vehicle to update its bluetooth key.
      * @param {number} vehicleId - The identifier of the vehicle.
      * @param {string} bluetoothKey - New bluetooth key (8 char max).
-     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config~1throttle/post
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1bluetooth-key/post
      */
     changeBluetoothKey(vehicleId: number, bluetoothKey: string): Promise<RequestResults>
     {
