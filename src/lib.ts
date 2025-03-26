@@ -668,6 +668,41 @@ export class KnotSVaaS
     {
         return this.makeVehicleRequest<DisabledVehicles>('GET', 'v1', 'disabled');
     }
+
+    /**
+     * Request a vehicle bluetooth key from the vehicle. This update the saved bluetooth key returned by getVehicleInformation().
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1bluetooth-key/get
+     */
+    fetchVehicleBluetoothKey(vehicleId: number): Promise<RequestResults>
+    {
+        return this.makeVehicleRequest<RequestResults>('GET', 'v1', 'bluetooth-key', vehicleId);
+    }
+
+    /**
+     * Request a vehicle to update its bluetooth key.
+     * @param {number} vehicleId - The identifier of the vehicle.
+     * @param {string} bluetoothKey - New bluetooth key (8 char max).
+     * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1config~1throttle/post
+     */
+    changeBluetoothKey(vehicleId: number, bluetoothKey: string): Promise<RequestResults>
+    {
+        if (typeof bluetoothKey !== 'string')
+        {
+            throw new SVaaSError('Bluetooth key must be a string');
+        }
+        if (bluetoothKey.length > 8)
+        {
+            throw new SVaaSError('Bluetooth key must have maximum length of 8 characters');
+        }
+        if (!/^[a-zA-Z0-9]+$/.test(bluetoothKey))
+        {
+            throw new SVaaSError('Bluetooth key must be only alphanumeric characters');
+        }
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'config/throttle', vehicleId, {
+            bluetooth_key: bluetoothKey
+        });
+    }
     // #endregion Vehicle commands
 
     // Signature validation

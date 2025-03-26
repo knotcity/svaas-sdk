@@ -195,6 +195,7 @@ interface VehicleInformationInterface extends DisabledVehiclesInterface
     locked: boolean | null;
     battery: number | null;
     iot_battery_percentage: number | null;
+    bluetooth_key: string | null;
 }
 /**
  * Enabled vehicles interface

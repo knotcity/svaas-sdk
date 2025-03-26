@@ -1,3 +1,15 @@
+# 1.16.0 / 2025-03-26
+
+## :tada: Enhancements
+
+* Add vehicle's `bluetooth_key` in `getVehicleInformation()` result.
+* Add function to retrieve the bluetooth key from a vehicle: `fetchVehicleBluetoothKey`.
+* Add function to change the bluetooth key of a vehicle: `changeBluetoothKey`.
+
+## :nut_and_bolt: Other
+
+* Upgrade dependencies.
+
 # 1.15.0 / 2025-01-27
 
 ## :tada: Enhancements
