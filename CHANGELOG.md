@@ -1,3 +1,9 @@
+# 1.16.1 / 2025-03-27
+
+## :nut_and_bolt: Other
+
+* Fix return type of `fetchVehicleBluetoothKey`
+
 # 1.16.0 / 2025-03-26
 
 ## :tada: Enhancements

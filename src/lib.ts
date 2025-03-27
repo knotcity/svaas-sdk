@@ -674,9 +674,9 @@ export class KnotSVaaS
      * @param {number} vehicleId - The identifier of the vehicle.
      * @documentation https://doc.knotcity.io/svaas/vehicle/request/swagger.html#/paths/~1v1~1{vehicleId}~1bluetooth-key/get
      */
-    fetchVehicleBluetoothKey(vehicleId: number): Promise<RequestResults>
+    fetchVehicleBluetoothKey(vehicleId: number): Promise<RequestResultsWithData<{ bluetooth_key: string | null }>>
     {
-        return this.makeVehicleRequest<RequestResults>('GET', 'v1', 'bluetooth-key', vehicleId);
+        return this.makeVehicleRequest<RequestResultsWithData<{ bluetooth_key: string }>>('GET', 'v1', 'bluetooth-key', vehicleId);
     }
 
     /**
