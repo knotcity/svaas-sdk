@@ -1,3 +1,9 @@
+# 1.16.2 / 2025-03-31
+
+## :nut_and_bolt: Other
+
+* Fix `changeBluetoothKey` function not calling the right endpoint.
+
 # 1.16.1 / 2025-03-27
 
 ## :nut_and_bolt: Other

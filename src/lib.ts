@@ -699,7 +699,7 @@ export class KnotSVaaS
         {
             throw new SVaaSError('Bluetooth key must be only alphanumeric characters');
         }
-        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'config/throttle', vehicleId, {
+        return this.makeVehicleRequest<RequestResults>('POST', 'v1', 'bluetooth-key', vehicleId, {
             bluetooth_key: bluetoothKey
         });
     }
